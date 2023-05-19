@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:postgres/postgres.dart';
 import 'package:postgres_builder/postgres_builder.dart';
+import 'package:postgres_pool/postgres_pool.dart';
 
 /// {@template postgres_builder}
 /// A tool designed to make writing SQL statements easier.
@@ -16,11 +16,12 @@ class PostgresBuilder {
     this.port = 5432,
     this.username,
     this.password,
-    this.timeout = const Duration(seconds: 30),
+    this.connectTimeout = const Duration(seconds: 30),
     this.queryTimeout = const Duration(seconds: 30),
+    this.maxConnectionAge = const Duration(hours: 1),
     this.isUnixSocket = false,
     FutureOr<void> Function(ProcessedSql message)? logger,
-  }) : _logger = logger ??
+  })  : _logger = logger ??
             ((value) => stdout.writeln(
                   '''
 --EXECUTING--
@@ -28,7 +29,21 @@ ${value.query}
 --WITH--
 '${value.parameters}
 ''',
-                ));
+                )),
+        _connection = PgPool(
+          PgEndpoint(
+            host: host,
+            port: port,
+            database: databaseName,
+            username: username,
+            password: password,
+            isUnixSocket: isUnixSocket,
+          ),
+          settings: PgPoolSettings()
+            ..queryTimeout = queryTimeout
+            ..connectTimeout = connectTimeout
+            ..maxConnectionAge = maxConnectionAge,
+        );
 
   final bool debug;
   final String host;
@@ -36,30 +51,13 @@ ${value.query}
   final int port;
   final String? username;
   final String? password;
-  final Duration timeout;
+  final Duration connectTimeout;
   final Duration queryTimeout;
+  final Duration maxConnectionAge;
   final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
 
-  late final PostgreSQLConnection _connection;
-
-  Future<void> connect() async {
-    _connection = PostgreSQLConnection(
-      host,
-      port,
-      databaseName,
-      username: username,
-      password: password,
-      timeoutInSeconds: timeout.inSeconds,
-      queryTimeoutInSeconds: queryTimeout.inSeconds,
-      isUnixSocket: isUnixSocket,
-    );
-    await _connection.open();
-  }
-
-  Future<void> disconnect() => _connection.close();
-
-  bool get isClosed => _connection.isClosed;
+  late final PostgreSQLExecutionContext _connection;
 
   Future<List<Map<String, dynamic>>> query(SqlStatement statement) async {
     final processed = statement.toSql();

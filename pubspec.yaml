@@ -1,0 +1,17 @@
+name: postgres_builder
+description: A tool designed to make writing SQL statements easier.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  postgres: ^2.6.1
+
+dev_dependencies:
+  mocktail: ^0.3.0
+  test: ^1.19.2
+  very_good_analysis: ^4.0.0
+
+min_coverage: 0

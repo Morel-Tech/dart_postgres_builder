@@ -3,6 +3,9 @@
   "enabled": true,
   "language": "en",
   "words": [
-    "mocktail"
+    "genhtml",
+    "lcov",
+    "mocktail",
+    "pubspec"
   ]
 }

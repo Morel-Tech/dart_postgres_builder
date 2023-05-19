@@ -9,7 +9,7 @@ class In implements FilterStatement {
   @override
   ProcessedSql toSql() {
     final columnParams = List<int>.generate(values.length, (i) => i)
-        .map((i) => '@${i}I$column')
+        .map((i) => '@${column}I$i')
         .toList();
     return ProcessedSql(
       query: '$column IN (${columnParams.join(', ')})',

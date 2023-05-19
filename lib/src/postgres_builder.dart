@@ -18,6 +18,7 @@ class PostgresBuilder {
     this.password,
     this.timeout = const Duration(seconds: 30),
     this.queryTimeout = const Duration(seconds: 30),
+    this.isUnixSocket = false,
     FutureOr<void> Function(ProcessedSql message)? logger,
   }) : _logger = logger ??
             ((value) => stdout.writeln(
@@ -37,6 +38,7 @@ ${value.query}
   final String? password;
   final Duration timeout;
   final Duration queryTimeout;
+  final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
 
   late final PostgreSQLConnection _connection;
@@ -50,6 +52,7 @@ ${value.query}
       password: password,
       timeoutInSeconds: timeout.inSeconds,
       queryTimeoutInSeconds: queryTimeout.inSeconds,
+      isUnixSocket: isUnixSocket,
     );
     await _connection.open();
   }

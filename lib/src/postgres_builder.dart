@@ -57,7 +57,10 @@ ${value.query}
   final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
 
-  late final PostgreSQLExecutionContext _connection;
+  late final PgPool _connection;
+
+  Future<void> close() => _connection.close();
+  PgPoolStatus status() => _connection.status();
 
   Future<List<Map<String, dynamic>>> query(SqlStatement statement) async {
     final processed = statement.toSql();

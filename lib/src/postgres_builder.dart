@@ -105,7 +105,8 @@ ${value.query}
       query,
       substitutionValues: substitutionValues,
     );
-    return List<Map<String, dynamic>>.from(result.first.first as List);
+    final rawList = result.first.first as List?;
+    return List<Map<String, dynamic>>.from(rawList ?? []);
   }
 
   Future<Map<String, dynamic>> rawSingleQuery(

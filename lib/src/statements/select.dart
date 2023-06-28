@@ -28,11 +28,11 @@ class Select implements SqlStatement {
       columns.map((e) => e.toSql().query).join(', '),
       'FROM',
       table,
+      if (join != null) ...join!.map((e) => e.toSql().query),
       if (processedWhere != null) ...[
         'WHERE',
         processedWhere.query,
       ],
-      if (join != null) ...join!.map((e) => e.toSql().query),
       if (order != null) order!.toSql().query,
       if (limit != null) 'LIMIT $limit'
     ].join(' ');

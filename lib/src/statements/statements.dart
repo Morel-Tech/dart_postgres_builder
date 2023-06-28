@@ -4,6 +4,7 @@ export 'delete.dart';
 export 'equals.dart';
 export 'in.dart';
 export 'insert.dart';
+export 'join.dart';
 export 'not.dart';
 export 'or.dart';
 export 'order.dart';

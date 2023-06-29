@@ -7,6 +7,7 @@ class Select implements SqlStatement {
     this.where,
     this.order,
     this.limit,
+    this.join,
   }) : table = from;
 
   final List<SqlStatement> columns;
@@ -14,6 +15,7 @@ class Select implements SqlStatement {
   final FilterStatement? where;
   final Order? order;
   final int? limit;
+  final List<Join>? join;
 
   @override
   ProcessedSql toSql() {
@@ -26,6 +28,7 @@ class Select implements SqlStatement {
       columns.map((e) => e.toSql().query).join(', '),
       'FROM',
       table,
+      if (join != null) ...join!.map((e) => e.toSql().query),
       if (processedWhere != null) ...[
         'WHERE',
         processedWhere.query,
@@ -37,7 +40,9 @@ class Select implements SqlStatement {
       query: query,
       parameters: {
         ...?processedWhere?.parameters,
-        for (final column in columns) ...column.toSql().parameters
+        for (final column in columns) ...column.toSql().parameters,
+        if (join != null)
+          for (final currentJoin in join!) ...currentJoin.toSql().parameters,
       },
     );
   }

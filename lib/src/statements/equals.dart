@@ -1,4 +1,5 @@
 import 'package:postgres_builder/postgres_builder.dart';
+import 'package:postgres_builder/src/random_keys.dart';
 
 class Equals implements FilterStatement {
   const Equals(this.column, this.value) : useParameter = true;
@@ -16,9 +17,10 @@ class Equals implements FilterStatement {
   @override
   ProcessedSql toSql() {
     if (useParameter) {
+      final randomString = '${column.name}${generateRandomString(6)}';
       return ProcessedSql(
-        query: '$column = @$column',
-        parameters: {column.toString(): value},
+        query: '$column = @$randomString',
+        parameters: {randomString: value},
       );
     }
     return ProcessedSql(

@@ -2,11 +2,5 @@
   "version": "0.2",
   "enabled": true,
   "language": "en",
-  "words": [
-    "genhtml",
-    "lcov",
-    "mocktail",
-    "pubspec",
-    "upsert"
-  ]
+  "words": ["genhtml", "lcov", "mocktail", "pubspec", "recase", "upsert"]
 }

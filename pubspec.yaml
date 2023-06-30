@@ -9,6 +9,7 @@ environment:
 dependencies:
   postgres: ^2.6.1
   postgres_pool: ^2.1.6
+  recase: ^4.1.0
 
 dev_dependencies:
   mocktail: ^0.3.0

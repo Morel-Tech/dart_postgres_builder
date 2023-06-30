@@ -5,7 +5,7 @@ class Order implements SqlStatement {
     this.columns, {
     this.sort = SortOrder.ascending,
   });
-  final List<String> columns;
+  final List<Column> columns;
   final SortOrder sort;
 
   @override

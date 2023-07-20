@@ -63,6 +63,8 @@ ${value.query}
   Future<void> close() => _connection.close();
   PgPoolStatus status() => _connection.status();
 
+  Future<void> execute(SqlStatement statement) => query(statement);
+
   Future<List<Map<String, dynamic>>> query(SqlStatement statement) async {
     try {
       final processed = statement.toSql();

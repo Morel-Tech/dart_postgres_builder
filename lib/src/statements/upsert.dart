@@ -5,11 +5,13 @@ class Upsert implements SqlStatement {
     this.values, {
     required String into,
     required this.uniqueKeys,
+    this.returningColumns = const [Column.star()],
   }) : table = into;
 
   final List<Map<String, dynamic>> values;
   final String table;
   final List<String> uniqueKeys;
+  final List<Column> returningColumns;
 
   @override
   ProcessedSql toSql() {
@@ -27,7 +29,7 @@ class Upsert implements SqlStatement {
       'DO UPDATE',
       'SET',
       columns.map((column) => '$column=EXCLUDED.$column').join(', '),
-      'RETURNING *'
+      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}',
     ].join(' ');
     return ProcessedSql(
       query: query,

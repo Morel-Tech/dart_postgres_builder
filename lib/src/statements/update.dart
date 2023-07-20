@@ -5,11 +5,13 @@ class Update implements SqlStatement {
     this.values, {
     required String from,
     required this.where,
+    this.returningColumns = const [Column.star()],
   }) : table = from;
 
   final Map<String, dynamic> values;
   final String table;
   final FilterStatement where;
+  final List<Column> returningColumns;
 
   @override
   ProcessedSql toSql() {
@@ -21,7 +23,7 @@ class Update implements SqlStatement {
       values.keys.map((row) => '$row=@val$row').join(', '),
       'WHERE',
       whereSql.query,
-      'RETURNING *'
+      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}'
     ].join(' ');
     return ProcessedSql(
       query: query,

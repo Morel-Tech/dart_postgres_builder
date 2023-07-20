@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 import 'package:postgres_pool/postgres_pool.dart';
 
@@ -63,20 +64,33 @@ ${value.query}
   PgPoolStatus status() => _connection.status();
 
   Future<List<Map<String, dynamic>>> query(SqlStatement statement) async {
-    final processed = statement.toSql();
-    if (debug) {
-      _logger(processed);
+    try {
+      final processed = statement.toSql();
+      if (debug) {
+        _logger(processed);
+      }
+      final result = await _connection.query(
+        processed.query,
+        substitutionValues: processed.parameters,
+      );
+      if (result.isEmpty) return [];
+      final columns =
+          result.columnDescriptions.map((e) => e.columnName).toList();
+      return [
+        for (var row = 0; row < result.length; row++)
+          {for (var i = 0; i < columns.length; i++) columns[i]: result[row][i]}
+      ];
+    } on CheckedFromJsonException catch (e) {
+      throw PostgresBuilderException(
+        e.message,
+        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
+      );
+    } on PostgreSQLException catch (e) {
+      throw PostgresBuilderException(
+        e.message,
+        {'code': e.code, 'detail': e.detail},
+      );
     }
-    final result = await _connection.query(
-      processed.query,
-      substitutionValues: processed.parameters,
-    );
-    if (result.isEmpty) return [];
-    final columns = result.columnDescriptions.map((e) => e.columnName).toList();
-    return [
-      for (var row = 0; row < result.length; row++)
-        {for (var i = 0; i < columns.length; i++) columns[i]: result[row][i]}
-    ];
   }
 
   Future<Map<String, dynamic>> singleQuery(SqlStatement statement) async =>

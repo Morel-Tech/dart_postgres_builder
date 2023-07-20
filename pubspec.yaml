@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  json_annotation: ^4.8.1
   postgres: ^2.6.1
   postgres_pool: ^2.1.6
   recase: ^4.1.0

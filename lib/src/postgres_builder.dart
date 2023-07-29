@@ -109,14 +109,30 @@ ${value.query}
   Future<List<T>> mappedQuery<T>(
     SqlStatement statement, {
     required T Function(Map<String, dynamic> json) fromJson,
-  }) async =>
-      (await query(statement)).map(fromJson).toList();
+  }) async {
+    try {
+      return (await query(statement)).map(fromJson).toList();
+    } on CheckedFromJsonException catch (e) {
+      throw PostgresBuilderException(
+        e.message,
+        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
+      );
+    }
+  }
 
   Future<T> mappedSingleQuery<T>(
     SqlStatement statement, {
     required T Function(Map<String, dynamic> json) fromJson,
-  }) async =>
-      fromJson(await singleQuery(statement));
+  }) async {
+    try {
+      return fromJson(await singleQuery(statement));
+    } on CheckedFromJsonException catch (e) {
+      throw PostgresBuilderException(
+        e.message,
+        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
+      );
+    }
+  }
 
   Future<List<Map<String, dynamic>>> rawQuery(
     String query, {

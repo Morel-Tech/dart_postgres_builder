@@ -22,7 +22,9 @@ class PostgresBuilder {
     this.maxConnectionAge = const Duration(hours: 1),
     this.isUnixSocket = false,
     FutureOr<void> Function(ProcessedSql message)? logger,
-  })  : _logger = logger ??
+    T Function<T>(dynamic input)? customTypesConverters,
+  })  : _customTypesConverter = customTypesConverters,
+        _logger = logger ??
             ((value) => stdout.writeln(
                   '''
 --EXECUTING--
@@ -57,6 +59,7 @@ ${value.query}
   final Duration maxConnectionAge;
   final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
+  final T Function<T>(dynamic input)? _customTypesConverter;
 
   late final PgPool _connection;
 
@@ -80,7 +83,12 @@ ${value.query}
           result.columnDescriptions.map((e) => e.columnName).toList();
       return [
         for (var row = 0; row < result.length; row++)
-          {for (var i = 0; i < columns.length; i++) columns[i]: result[row][i]}
+          {
+            for (var i = 0; i < columns.length; i++)
+              columns[i]: _customTypesConverter != null
+                  ? _customTypesConverter!.call(result[row][i])
+                  : result[row][i]
+          }
       ];
     } on CheckedFromJsonException catch (e) {
       throw PostgresBuilderException(

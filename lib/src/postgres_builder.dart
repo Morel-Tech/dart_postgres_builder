@@ -22,7 +22,7 @@ class PostgresBuilder {
     this.maxConnectionAge = const Duration(hours: 1),
     this.isUnixSocket = false,
     FutureOr<void> Function(ProcessedSql message)? logger,
-    T Function<T>(dynamic input)? customTypesConverters,
+    dynamic Function(dynamic input)? customTypesConverters,
   })  : _customTypesConverter = customTypesConverters,
         _logger = logger ??
             ((value) => stdout.writeln(
@@ -59,7 +59,7 @@ ${value.query}
   final Duration maxConnectionAge;
   final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
-  final T Function<T>(dynamic input)? _customTypesConverter;
+  final dynamic Function(dynamic input)? _customTypesConverter;
 
   late final PgPool _connection;
 

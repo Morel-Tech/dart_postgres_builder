@@ -6,6 +6,7 @@ export 'in.dart';
 export 'insert.dart';
 export 'join.dart';
 export 'not.dart';
+export 'operator_comparison.dart';
 export 'or.dart';
 export 'order.dart';
 export 'select.dart';

@@ -1,9 +1,9 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class OperatorComparision extends FilterStatement {
-  OperatorComparision(this.column, this.value, {required this.operator})
+class OperatorComparision implements FilterStatement {
+  const OperatorComparision(this.column, this.value, {required this.operator})
       : useParameter = true;
-  OperatorComparision.otherColumn(
+  const OperatorComparision.otherColumn(
     Column column1,
     Column column2, {
     required this.operator,

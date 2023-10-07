@@ -49,10 +49,11 @@ class _NestedColumn extends Column {
   @override
   ProcessedSql toSql() {
     final selectSql = select.toSql();
-    final function = single ? 'row_to_json' : 'json_agg';
+    final query = single
+        ? '''(SELECT row_to_json($as.*) FROM (${selectSql.query}) as $as) as "$as"'''
+        : '''(SELECT COALESCE(json_agg($as.*), '[]'::json) FROM (${selectSql.query}) as $as) as "$as"''';
     return ProcessedSql(
-      query:
-          '(SELECT $function($as.*) FROM (${selectSql.query}) as $as) as "$as"',
+      query: query,
       parameters: selectSql.parameters,
     );
   }

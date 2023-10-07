@@ -34,7 +34,7 @@ class Select implements SqlStatement {
         processedWhere.query,
       ],
       if (order != null) order!.toSql().query,
-      if (limit != null) 'LIMIT $limit'
+      if (limit != null) 'LIMIT $limit',
     ].join(' ');
 
     return ProcessedSql(

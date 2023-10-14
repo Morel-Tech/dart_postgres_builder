@@ -11,10 +11,9 @@ class Column implements SqlStatement {
   }) =>
       _NestedColumn(select, as: as, single: single);
 
-  const Column.star()
+  const Column.star({this.table})
       : name = '*',
-        as = null,
-        table = null;
+        as = null;
 
   final String? name;
   final String? table;

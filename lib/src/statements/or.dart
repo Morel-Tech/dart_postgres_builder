@@ -1,18 +1,19 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
 class Or implements FilterStatement {
-  const Or(this.first, this.second);
+  const Or(this.statements);
 
-  final SqlStatement first;
-  final SqlStatement second;
+  final List<SqlStatement> statements;
+
 
   @override
   ProcessedSql toSql() {
-    final firstSql = first.toSql();
-    final secondSql = second.toSql();
+    final processed = statements.map((e) => e.toSql());
     return ProcessedSql(
-      query: '(${firstSql.query} OR ${secondSql.query})',
-      parameters: {...firstSql.parameters, ...secondSql.parameters},
+      query: '(${processed.map((e) => e.query).join(' OR ')})',
+      parameters: {
+        for (final current in processed) ...current.parameters,
+      },
     );
   }
 }

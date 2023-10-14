@@ -7,3 +7,5 @@ build/
 pubspec.lock
 .mason
 .DS_Store
+
+coverage

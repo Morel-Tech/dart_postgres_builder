@@ -11,17 +11,16 @@ class Column implements SqlStatement {
   }) =>
       _NestedColumn(select, as: as, single: single);
 
-  const Column.star()
+  const Column.star({this.table})
       : name = '*',
-        as = null,
-        table = null;
+        as = null;
 
   final String? name;
   final String? table;
   final String? as;
 
   String get parameterName => table != null
-      ? '${table?.camelCase}${name?.camelCase}'.camelCase
+      ? '${table?.camelCase}_${name?.camelCase}'.camelCase
       : '${name?.camelCase}';
 
   @override
@@ -49,10 +48,11 @@ class _NestedColumn extends Column {
   @override
   ProcessedSql toSql() {
     final selectSql = select.toSql();
-    final function = single ? 'row_to_json' : 'json_agg';
+    final query = single
+        ? '''(SELECT row_to_json($as.*) FROM (${selectSql.query}) as $as) as "$as"'''
+        : '''(SELECT COALESCE(json_agg($as.*), '[]'::json) FROM (${selectSql.query}) as $as) as "$as"''';
     return ProcessedSql(
-      query:
-          '(SELECT $function($as.*) FROM (${selectSql.query}) as $as) as "$as"',
+      query: query,
       parameters: selectSql.parameters,
     );
   }

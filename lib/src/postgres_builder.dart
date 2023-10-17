@@ -1,175 +1,125 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:postgres_builder/postgres_builder.dart';
-import 'package:postgres_pool/postgres_pool.dart';
 
-/// {@template postgres_builder}
-/// A tool designed to make writing SQL statements easier.
-/// {@endtemplate}
-class PostgresBuilder {
-  /// {@macro postgres_builder}
-  PostgresBuilder({
+abstract class PostgresBuilder {
+  const PostgresBuilder({
+    dynamic Function(dynamic input)? customTypeConverter,
     this.debug = false,
-    this.host = 'localhost',
-    this.databaseName = 'postgres',
-    this.port = 5432,
-    this.username,
-    this.password,
-    this.connectTimeout = const Duration(seconds: 30),
-    this.queryTimeout = const Duration(seconds: 30),
-    this.maxConnectionAge = const Duration(hours: 1),
-    this.isUnixSocket = false,
     FutureOr<void> Function(ProcessedSql message)? logger,
-    dynamic Function(dynamic input)? customTypesConverters,
-  })  : _customTypesConverter = customTypesConverters,
-        _logger = logger ??
-            ((value) => stdout.writeln(
-                  '''
---EXECUTING--
-${value.query}
---WITH--
-'${value.parameters}
-''',
-                )),
-        _connection = PgPool(
-          PgEndpoint(
-            host: host,
-            port: port,
-            database: databaseName,
-            username: username,
-            password: password,
-            isUnixSocket: isUnixSocket,
-          ),
-          settings: PgPoolSettings()
-            ..queryTimeout = queryTimeout
-            ..connectTimeout = connectTimeout
-            ..maxConnectionAge = maxConnectionAge,
-        );
+  })  : _customTypesConverter = customTypeConverter,
+        _logger = logger ?? standardLogger;
+
+  @visibleForOverriding
+  FutureOr<List<Map<String, dynamic>>> runQuery(
+    ProcessedSql processed,
+  );
 
   final bool debug;
-  final String host;
-  final String databaseName;
-  final int port;
-  final String? username;
-  final String? password;
-  final Duration connectTimeout;
-  final Duration queryTimeout;
-  final Duration maxConnectionAge;
-  final bool isUnixSocket;
   final FutureOr<void> Function(ProcessedSql message) _logger;
   final dynamic Function(dynamic input)? _customTypesConverter;
 
-  late final PgPool _connection;
+  Future<List<Map<String, dynamic>>> _runQuery(
+    ProcessedSql processed,
+  ) async {
+    if (debug) {
+      _logger(processed);
+    }
 
-  Future<void> close() => _connection.close();
-  PgPoolStatus status() => _connection.status();
+    final result = await runQuery(processed);
+    return _customTypesConverter == null
+        ? result
+        : [
+            for (final row in result)
+              {
+                for (final MapEntry(:key, :value) in row.entries)
+                  key: _customTypesConverter!(value),
+              },
+          ];
+  }
 
-  Future<void> execute(SqlStatement statement) => query(statement);
-
-  Future<List<Map<String, dynamic>>> query(SqlStatement statement) async {
+  Future<List<T>> _runMappedQuery<T>(
+    ProcessedSql processed, {
+    required T Function(Map<String, dynamic> json) fromJson,
+  }) async {
     try {
-      final processed = statement.toSql();
-      if (debug) {
-        _logger(processed);
-      }
-      final result = await _connection.query(
-        processed.query,
-        substitutionValues: processed.parameters,
-      );
-      if (result.isEmpty) return [];
-      final columns =
-          result.columnDescriptions.map((e) => e.columnName).toList();
-      return [
-        for (var row = 0; row < result.length; row++)
-          {
-            for (var i = 0; i < columns.length; i++)
-              columns[i]: _customTypesConverter != null
-                  ? _customTypesConverter!.call(result[row][i])
-                  : result[row][i]
-          }
-      ];
+      final results = await _runQuery(processed);
+      return results.map((e) => fromJson(e)).toList();
     } on CheckedFromJsonException catch (e) {
       throw PostgresBuilderException(
         e.message,
         {'key': e.key, 'badKey': e.badKey, 'map': e.map},
       );
-    } on PostgreSQLException catch (e) {
-      throw PostgresBuilderException(
-        e.message,
-        {'code': e.code, 'detail': e.detail},
-      );
     }
   }
 
+  Future<List<Map<String, dynamic>>> query(
+    SqlStatement statement,
+  ) =>
+      _runQuery(statement.toSql());
+
+  Future<void> execute(SqlStatement statement) => _runQuery(statement.toSql());
+
   Future<Map<String, dynamic>> singleQuery(SqlStatement statement) async =>
-      (await query(statement)).single;
+      (await _runQuery(statement.toSql())).single;
 
   Future<List<T>> mappedQuery<T>(
     SqlStatement statement, {
     required T Function(Map<String, dynamic> json) fromJson,
   }) async {
-    try {
-      return (await query(statement)).map(fromJson).toList();
-    } on CheckedFromJsonException catch (e) {
-      throw PostgresBuilderException(
-        e.message,
-        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
-      );
-    }
+    return _runMappedQuery(statement.toSql(), fromJson: fromJson);
   }
 
   Future<T> mappedSingleQuery<T>(
     SqlStatement statement, {
     required T Function(Map<String, dynamic> json) fromJson,
-  }) async {
-    try {
-      return fromJson(await singleQuery(statement));
-    } on CheckedFromJsonException catch (e) {
-      throw PostgresBuilderException(
-        e.message,
-        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
-      );
-    }
-  }
+  }) async =>
+      (await _runMappedQuery(statement.toSql(), fromJson: fromJson)).single;
 
   Future<List<Map<String, dynamic>>> rawQuery(
     String query, {
     Map<String, dynamic> substitutionValues = const {},
-  }) async {
-    if (debug) {
-      _logger(ProcessedSql(query: query, parameters: substitutionValues));
-    }
-    final result = await _connection.query(
-      query,
-      substitutionValues: substitutionValues,
-    );
-    final rawList = result.first.first as List?;
-    return List<Map<String, dynamic>>.from(rawList ?? []);
-  }
+  }) =>
+      _runQuery(ProcessedSql(query: query, parameters: substitutionValues));
 
   Future<Map<String, dynamic>> rawSingleQuery(
     String query, {
     Map<String, dynamic> substitutionValues = const {},
   }) async =>
-      (await rawQuery(query, substitutionValues: substitutionValues)).single;
+      (await _runQuery(
+        ProcessedSql(query: query, parameters: substitutionValues),
+      ))
+          .single;
 
   Future<List<T>> rawMappedQuery<T>(
     String query, {
     required T Function(Map<String, dynamic> json) fromJson,
     Map<String, dynamic> substitutionValues = const {},
-  }) async =>
-      (await rawQuery(query, substitutionValues: substitutionValues))
-          .map(fromJson)
-          .toList();
+  }) =>
+      _runMappedQuery(
+        ProcessedSql(query: query, parameters: substitutionValues),
+        fromJson: fromJson,
+      );
 
   Future<T> rawMappedSingleQuery<T>(
     String query, {
     required T Function(Map<String, dynamic> json) fromJson,
     Map<String, dynamic> substitutionValues = const {},
   }) async =>
-      fromJson(
-        await rawSingleQuery(query, substitutionValues: substitutionValues),
+      (await _runMappedQuery(
+        ProcessedSql(query: query, parameters: substitutionValues),
+        fromJson: fromJson,
+      ))
+          .single;
+
+  static void standardLogger(
+    ProcessedSql value, {
+    @visibleForTesting io.Stdout? stdout,
+  }) =>
+      (stdout ?? io.stdout).writeln(
+        "\n--EXECUTING--\n${value.query}\n--WITH--\n'${value.parameters}'\n\n",
       );
 }

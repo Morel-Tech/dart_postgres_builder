@@ -4,11 +4,15 @@
   "language": "en",
   "words": [
     "Comparision",
+    "endtemplate",
     "genhtml",
     "lcov",
     "mocktail",
+    "pana",
     "pubspec",
     "recase",
-    "upsert"
+    "upsert",
+    "valkey",
+    "writeln"
   ]
 }

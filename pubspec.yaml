@@ -1,19 +1,21 @@
 name: postgres_builder
-description: A tool designed to make writing SQL statements easier.
+description: A tool designed to make writing PostgreSQL statements easier without writing them by hand.
 version: 0.0.1
-publish_to: none
+repository: https://github.com/Morel-Tech/dart_postgres_builder
+issue_tracker: https://github.com/Morel-Tech/dart_postgres_builder/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   json_annotation: ^4.8.1
+  meta: ^1.11.0
   postgres: ^2.6.1
   postgres_pool: ^2.1.6
   recase: ^4.1.0
 
 dev_dependencies:
-  mocktail: ^1.0.0
+  mocktail: ^1.0.1
   test: ^1.19.2
   very_good_analysis: ^5.0.0
 

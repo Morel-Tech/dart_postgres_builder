@@ -23,7 +23,7 @@ class Update implements SqlStatement {
       values.keys.map((row) => '$row=@val$row').join(', '),
       'WHERE',
       whereSql.query,
-      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}'
+      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}',
     ].join(' ');
     return ProcessedSql(
       query: query,

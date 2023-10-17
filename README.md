@@ -1,5 +1,6 @@
 # Postgres Builder
 
+[![pub package](https://img.shields.io/pub/v/postgres_builder.svg)](https://pub.dev/packages/postgres_builder)
 [![ci][ci_badge]][ci_link]
 [![coverage][coverage_badge]][ci_link]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
@@ -9,15 +10,16 @@
 A tool designed to make writing SQL statements easier.
 
 ## Usage
+
 To start, create an instance of `PostgresBuilder` to run your queries. There is an included `PgPoolPostgresBuilder` that uses the [postgres_pool](https://pub.dev/packages/postgres_pool) package, but you can create your own by extending `PostgresBuilder`.
 
 To create SQL strings, create `Statement`s, one of
+
 - `Select`
 - `Insert`
 - `Update`
 - `Delete`
 - `Upsert` (insert unless the entity already exists, then update)
-
 
 ### Available Methods
 
@@ -28,6 +30,7 @@ To create SQL strings, create `Statement`s, one of
 - `mappedSingleQuery`: run a query and get a single row parsed using your provided `fromJson` function
 
 ### Raw Queries
+
 For all available methods, just add `raw` to the name to pass in a raw SQL string instead of a Statement.
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg

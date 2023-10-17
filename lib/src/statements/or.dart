@@ -5,7 +5,6 @@ class Or implements FilterStatement {
 
   final List<SqlStatement> statements;
 
-
   @override
   ProcessedSql toSql() {
     final processed = statements.map((e) => e.toSql());

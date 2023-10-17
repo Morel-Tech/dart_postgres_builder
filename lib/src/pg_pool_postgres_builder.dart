@@ -40,7 +40,6 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
             ),
         super(customTypeConverter: customTypesConverters);
 
-  
   final String host;
   final String databaseName;
   final int port;
@@ -70,12 +69,8 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
           result.columnDescriptions.map((e) => e.columnName).toList();
       return [
         for (var row = 0; row < result.length; row++)
-          {
-            for (var i = 0; i < columns.length; i++)
-              columns[i]: result[row][i]
-          }
+          {for (var i = 0; i < columns.length; i++) columns[i]: result[row][i]}
       ];
-      
     } on PostgreSQLException catch (e) {
       throw PostgresBuilderException(
         e.message,

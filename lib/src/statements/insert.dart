@@ -13,7 +13,9 @@ class Insert implements SqlStatement {
 
   @override
   ProcessedSql toSql() {
-    final columns = values.first.keys;
+    final columns = <String>{
+      for (final row in values) ...row.keys,
+    };
     final query = [
       'INSERT',
       'INTO',
@@ -22,7 +24,7 @@ class Insert implements SqlStatement {
       'VALUES',
       for (var row = 0; row < values.length; row++)
         '''(${columns.map((e) => '@$e$row').join(', ')})${row == values.length - 1 ? '' : ','}''',
-      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}'
+      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}',
     ].join(' ');
     return ProcessedSql(
       query: query,

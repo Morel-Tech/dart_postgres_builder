@@ -3,6 +3,7 @@ library postgres_builder;
 
 export 'package:postgres/postgres.dart' show PostgreSQLException;
 
+export 'src/pg_pool_postgres_builder.dart';
 export 'src/postgres_builder.dart';
 export 'src/postgres_builder_exception.dart';
 export 'src/processed_sql.dart';

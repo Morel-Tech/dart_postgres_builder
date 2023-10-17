@@ -11,17 +11,16 @@ class Column implements SqlStatement {
   }) =>
       _NestedColumn(select, as: as, single: single);
 
-  const Column.star()
+  const Column.star({this.table})
       : name = '*',
-        as = null,
-        table = null;
+        as = null;
 
   final String? name;
   final String? table;
   final String? as;
 
   String get parameterName => table != null
-      ? '${table?.camelCase}${name?.camelCase}'.camelCase
+      ? '${table?.camelCase}_${name?.camelCase}'.camelCase
       : '${name?.camelCase}';
 
   @override

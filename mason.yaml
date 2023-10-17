@@ -1,2 +1,2 @@
 bricks:
-  github_actions_dart: 0.0.18
+  github_actions_dart: ^1.0.0

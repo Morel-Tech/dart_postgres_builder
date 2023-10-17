@@ -15,23 +15,34 @@ class _MockPostgreSQLResultRow extends Mock implements PostgreSQLResultRow {}
 
 class _MockColumnDescription extends Mock implements ColumnDescription {}
 
+class _MockPgEndpoint extends Mock implements PgEndpoint {}
+
 void main() {
   group('PgPoolPostgresBuilder', () {
     test('can be instantiated', () {
-      expect(PgPoolPostgresBuilder(), isNotNull);
+      expect(PgPoolPostgresBuilder(pgEndpoint: _MockPgEndpoint()), isNotNull);
     });
 
     test('close closes connection', () async {
       final pgPool = _MockPgPool();
       when(() => pgPool.close()).thenAnswer((_) async {});
-      await PgPoolPostgresBuilder(connection: pgPool).close();
+      await PgPoolPostgresBuilder(
+        connection: pgPool,
+        pgEndpoint: _MockPgEndpoint(),
+      ).close();
       verify(() => pgPool.close()).called(1);
     });
     test('status returns status', () async {
       final pgPool = _MockPgPool();
       final status = _MockPgPoolStatus();
       when(() => pgPool.status()).thenReturn(status);
-      expect(PgPoolPostgresBuilder(connection: pgPool).status(), status);
+      expect(
+        PgPoolPostgresBuilder(
+          connection: pgPool,
+          pgEndpoint: _MockPgEndpoint(),
+        ).status(),
+        status,
+      );
     });
 
     group('runQuery', () {
@@ -42,7 +53,10 @@ void main() {
       setUp(() {
         pgPool = _MockPgPool();
         result = _MockPostgreSQLResult();
-        builder = PgPoolPostgresBuilder(connection: pgPool);
+        builder = PgPoolPostgresBuilder(
+          connection: pgPool,
+          pgEndpoint: _MockPgEndpoint(),
+        );
         when(
           () => pgPool.query(
             any(),

@@ -10,45 +10,17 @@ import 'package:postgres_pool/postgres_pool.dart';
 class PgPoolPostgresBuilder extends PostgresBuilder {
   /// {@macro pg_postgres_builder}
   PgPoolPostgresBuilder({
+    required PgEndpoint pgEndpoint,
     super.debug = false,
-    this.host = 'localhost',
-    this.databaseName = 'postgres',
-    this.port = 5432,
-    this.username,
-    this.password,
-    this.connectTimeout = const Duration(seconds: 30),
-    this.queryTimeout = const Duration(seconds: 30),
-    this.maxConnectionAge = const Duration(hours: 1),
-    this.isUnixSocket = false,
+    PgPoolSettings? pgPoolSettings,
     super.logger,
-    dynamic Function(dynamic input)? customTypesConverters,
+    super.customTypeConverter,
     @visibleForTesting PgPool? connection,
-  })  : _connection = connection ??
+  }) : _connection = connection ??
             PgPool(
-              PgEndpoint(
-                host: host,
-                port: port,
-                database: databaseName,
-                username: username,
-                password: password,
-                isUnixSocket: isUnixSocket,
-              ),
-              settings: PgPoolSettings()
-                ..queryTimeout = queryTimeout
-                ..connectTimeout = connectTimeout
-                ..maxConnectionAge = maxConnectionAge,
-            ),
-        super(customTypeConverter: customTypesConverters);
-
-  final String host;
-  final String databaseName;
-  final int port;
-  final String? username;
-  final String? password;
-  final Duration connectTimeout;
-  final Duration queryTimeout;
-  final Duration maxConnectionAge;
-  final bool isUnixSocket;
+              pgEndpoint,
+              settings: pgPoolSettings,
+            );
 
   final PgPool _connection;
 

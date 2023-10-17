@@ -13,7 +13,9 @@ class Insert implements SqlStatement {
 
   @override
   ProcessedSql toSql() {
-    final columns = values.first.keys;
+    final columns = <String>{
+      for (final row in values) ...row.keys,
+    };
     final query = [
       'INSERT',
       'INTO',

@@ -43,6 +43,17 @@ void main() {
         );
       });
     });
+    group('paramName returns correct', () {
+      test('when table is null', () {
+        expect(const Column('col_name').parameterName, 'colName');
+      });
+      test('when table is not null', () {
+        expect(
+          const Column('col_name', table: 'table_name').parameterName,
+          'tableNameColName',
+        );
+      });
+    });
   });
   group('Column.star()', () {
     group('toSql', () {

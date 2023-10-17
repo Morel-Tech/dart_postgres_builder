@@ -1,4 +1,3 @@
-import 'package:matcher/matcher.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 import 'package:test/test.dart';
 

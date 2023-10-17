@@ -20,7 +20,7 @@ class Column implements SqlStatement {
   final String? as;
 
   String get parameterName => table != null
-      ? '${table?.camelCase}${name?.camelCase}'.camelCase
+      ? '${table?.camelCase}_${name?.camelCase}'.camelCase
       : '${name?.camelCase}';
 
   @override

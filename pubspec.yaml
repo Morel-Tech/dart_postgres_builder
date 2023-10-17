@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   json_annotation: ^4.8.1
+  meta: ^1.11.0
   postgres: ^2.6.1
   postgres_pool: ^2.1.6
   recase: ^4.1.0

@@ -10,10 +10,10 @@ class In implements FilterStatement {
   ProcessedSql toSql() {
     final columnParams = List<String>.generate(
       values.length,
-      (_) => '@${column.parameterName}',
+      (i) => '${column.parameterName}$i',
     );
     return ProcessedSql(
-      query: '$column IN (${columnParams.join(', ')})',
+      query: '$column IN (${columnParams.map((e) => '@$e').join(', ')})',
       parameters: {
         for (var i = 0; i < values.length; i++) columnParams[i]: values[i],
       },

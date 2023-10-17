@@ -10,6 +10,8 @@
     "mocktail",
     "pubspec",
     "recase",
-    "upsert"
+    "upsert",
+    "valkey",
+    "writeln"
   ]
 }

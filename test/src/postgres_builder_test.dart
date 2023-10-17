@@ -59,7 +59,7 @@ void main() {
         builder.query(statement),
         completion(
           equals([
-            {'key': 'value'}
+            {'key': 'value'},
           ]),
         ),
       );
@@ -77,7 +77,7 @@ void main() {
         builder.rawQuery('__query__'),
         completion(
           equals([
-            {'key': 'value'}
+            {'key': 'value'},
           ]),
         ),
       );
@@ -201,7 +201,7 @@ void main() {
     test('custom type converter converts types', () {
       final builder = TestBuilder(
         results: () => [
-          {'key': 'value'}
+          {'key': 'value'},
         ],
         customTypeConverter: (input) => 'new_value',
       );

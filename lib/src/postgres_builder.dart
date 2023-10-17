@@ -36,8 +36,8 @@ abstract class PostgresBuilder {
             for (final row in result)
               {
                 for (final MapEntry(:key, :value) in row.entries)
-                  key: _customTypesConverter!(value)
-              }
+                  key: _customTypesConverter!(value),
+              },
           ];
   }
 

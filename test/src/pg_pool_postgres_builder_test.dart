@@ -71,7 +71,7 @@ void main() {
           builder.runQuery(sql),
           completion(
             equals([
-              {'__columnName__': '__value__'}
+              {'__columnName__': '__value__'},
             ]),
           ),
         );

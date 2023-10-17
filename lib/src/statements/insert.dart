@@ -24,7 +24,7 @@ class Insert implements SqlStatement {
       'VALUES',
       for (var row = 0; row < values.length; row++)
         '''(${columns.map((e) => '@$e$row').join(', ')})${row == values.length - 1 ? '' : ','}''',
-      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}'
+      'RETURNING ${returningColumns.map((e) => e.toSql().query).join(', ')}',
     ].join(' ');
     return ProcessedSql(
       query: query,

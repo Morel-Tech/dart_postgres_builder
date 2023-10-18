@@ -40,7 +40,7 @@ void main() {
         PgPoolPostgresBuilder(
           connection: pgPool,
           pgEndpoint: _MockPgEndpoint(),
-        ).status(),
+        ).status,
         status,
       );
     });

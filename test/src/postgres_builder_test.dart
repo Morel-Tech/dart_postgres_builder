@@ -176,6 +176,9 @@ void main() {
     test('execute calls the query', () {
       expect(builder.execute(statement), completes);
     });
+    test('rawExecute calls the query', () {
+      expect(builder.rawExecute('__query__'), completes);
+    });
 
     test('standardLogger returns correctly', () {
       final stdout = _MockStdout();

@@ -5,14 +5,14 @@ import 'package:postgres_builder/postgres_builder.dart';
 import 'package:postgres_pool/postgres_pool.dart';
 
 /// {@template pg_postgres_builder}
-/// A tool designed to make writing SQL statements easier.
+/// A [PostgresBuilder] that uses a [PgPool] to execute the queries.
 /// {@endtemplate}
 class PgPoolPostgresBuilder extends PostgresBuilder {
   /// {@macro pg_postgres_builder}
   PgPoolPostgresBuilder({
     required PgEndpoint pgEndpoint,
-    super.debug = false,
     PgPoolSettings? pgPoolSettings,
+    super.debug = false,
     super.logger,
     super.customTypeConverter,
     @visibleForTesting PgPool? connection,
@@ -24,8 +24,11 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
 
   final PgPool _connection;
 
+  /// Closes the [PgPool] connection
   Future<void> close() => _connection.close();
-  PgPoolStatus status() => _connection.status();
+
+  /// The status of the [PgPool] connection
+  PgPoolStatus get status => _connection.status();
 
   @override
   Future<List<Map<String, dynamic>>> runQuery(

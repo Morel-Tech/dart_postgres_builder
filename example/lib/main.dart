@@ -1,7 +1,6 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:postgres_builder/postgres_builder.dart';
-import 'package:postgres_pool/postgres_pool.dart';
 
 Future<void> main() async {
   final builder = PgPoolPostgresBuilder(

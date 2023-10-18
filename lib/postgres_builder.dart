@@ -2,6 +2,8 @@
 library postgres_builder;
 
 export 'package:postgres/postgres.dart' show PostgreSQLException;
+export 'package:postgres_pool/postgres_pool.dart'
+    show PgEndpoint, PgPoolSettings;
 
 export 'src/pg_pool_postgres_builder.dart';
 export 'src/postgres_builder.dart';

@@ -8,6 +8,7 @@ class Select implements SqlStatement {
     this.order,
     this.limit,
     this.join,
+    this.group,
   }) : table = from;
 
   final List<SqlStatement> columns;
@@ -15,6 +16,7 @@ class Select implements SqlStatement {
   final FilterStatement? where;
   final Order? order;
   final int? limit;
+  final Group? group;
   final List<Join>? join;
 
   @override
@@ -33,6 +35,7 @@ class Select implements SqlStatement {
         'WHERE',
         processedWhere.query,
       ],
+      if (group != null) group!.toSql().query,
       if (order != null) order!.toSql().query,
       if (limit != null) 'LIMIT $limit',
     ].join(' ');

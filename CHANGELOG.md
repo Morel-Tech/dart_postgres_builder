@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Fixed `Group` not generating correct query
+
 ## 0.1.0
 
 - Added `Group` to support `GROUP BY` clauses

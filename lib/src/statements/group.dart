@@ -6,9 +6,8 @@ class Group extends SqlStatement {
   final List<Column> columns;
   @override
   ProcessedSql toSql() {
-    final columnNames = columns.map((e) => e.parameterName);
     return ProcessedSql(
-      query: 'GROUP BY ${columnNames.join(', ')}',
+      query: 'GROUP BY ${columns.join(', ')}',
       parameters: const {},
     );
   }

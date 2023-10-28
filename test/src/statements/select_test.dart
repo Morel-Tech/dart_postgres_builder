@@ -14,6 +14,8 @@ class _MockFilterStatement extends Mock implements FilterStatement {}
 
 class _MockOrder extends Mock implements Order {}
 
+class _MockGroup extends Mock implements Group {}
+
 void main() {
   group('Select', () {
     group('toSql() returns correctly', () {
@@ -100,6 +102,24 @@ void main() {
           select.toSql(),
           equalsSql(
             query: '''SELECT __column__ FROM __table__ LIMIT 1''',
+          ),
+        );
+      });
+      test('with group is provided', () {
+        final column = _MockColumn();
+
+        when(() => column.toSql()).thenReturn(
+          const ProcessedSql(query: '__column__', parameters: {}),
+        );
+        final group = _MockGroup();
+        when(() => group.toSql()).thenReturn(
+          const ProcessedSql(query: '__group__', parameters: {}),
+        );
+        final select = Select([column], group: group, from: '__table__');
+        expect(
+          select.toSql(),
+          equalsSql(
+            query: '''SELECT __column__ FROM __table__ __group__''',
           ),
         );
       });

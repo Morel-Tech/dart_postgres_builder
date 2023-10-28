@@ -2,6 +2,7 @@ export 'and.dart';
 export 'column.dart';
 export 'delete.dart';
 export 'equals.dart';
+export 'group.dart';
 export 'in.dart';
 export 'insert.dart';
 export 'join.dart';

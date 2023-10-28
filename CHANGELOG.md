@@ -1,3 +1,7 @@
+## 0.1.0
+
+- Added `Group` to support `GROUP BY` clauses
+
 ## 0.0.3
 
 - Added some documentation

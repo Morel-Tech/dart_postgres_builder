@@ -30,6 +30,25 @@ void main() {
         ),
       );
     });
+
+    test('toSql() returns correctly when use', () {
+      final column = _MockColumn();
+      when(() => column.parameterName).thenReturn('__paramName__');
+
+      final comparison = OperatorComparision(
+        column,
+        '__value__',
+        operator: '__operator__',
+        columnFirst: false,
+      );
+      expect(
+        comparison.toSql(),
+        equalsSql(
+          query: '@__paramName__ __operator__ __colName__',
+          parameters: {'__paramName__': '__value__'},
+        ),
+      );
+    });
   });
   group('OperatorComparison.otherColumn', () {
     test('toSql() returns correctly', () {

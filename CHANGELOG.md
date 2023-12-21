@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Added `columnFirst` parameter on `OperatorComparision`
+
 ## 0.1.1
 
 - Fixed `Group` not generating correct query

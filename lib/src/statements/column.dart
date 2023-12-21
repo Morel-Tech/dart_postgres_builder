@@ -6,7 +6,7 @@ class Column implements SqlStatement {
   const Column._({this.name, this.as, this.table});
   factory Column.nested(
     Select select, {
-    required String as,
+    required String? as,
     bool single = false,
   }) =>
       _NestedColumn(select, as: as, single: single);

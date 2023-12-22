@@ -107,6 +107,43 @@ void main() {
           ),
         );
       });
+      test('returns correctly when as is null', () {
+        expect(
+          Column.nested(select, as: null, single: true).toSql(),
+          equalsSql(
+            query: '''(SELECT row_to_json(*) FROM (__query__))''',
+            parameters: {'__key__': '__value__'},
+          ),
+        );
+      });
+      test('returns correctly when as is null an not single', () {
+        expect(
+          Column.nested(select, as: null).toSql(),
+          equalsSql(
+            query:
+                '''(SELECT COALESCE(json_agg(*), '[]'::json) FROM (__query__))''',
+            parameters: {'__key__': '__value__'},
+          ),
+        );
+      });
+      test('returns correctly when as is null an convert to json is false', () {
+        expect(
+          Column.nested(select, as: null, convertToJson: false).toSql(),
+          equalsSql(
+            query: '(__query__)',
+            parameters: {'__key__': '__value__'},
+          ),
+        );
+      });
+      test('returns correctly when as is set an convert to json is false', () {
+        expect(
+          Column.nested(select, as: '__alias__', convertToJson: false).toSql(),
+          equalsSql(
+            query: '(__query__) AS "__alias__"',
+            parameters: {'__key__': '__value__'},
+          ),
+        );
+      });
     });
   });
 }

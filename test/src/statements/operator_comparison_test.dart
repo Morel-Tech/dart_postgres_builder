@@ -24,12 +24,13 @@ void main() {
         column,
         '__value__',
         operator: '__operator__',
+        parameterGenerator: () => '__parameter__',
       );
       expect(
         comparison.toSql(),
         equalsSql(
-          query: '__sql__ __operator__ @__operator__Parameter',
-          parameters: {'__operator__Parameter': '__value__'},
+          query: '__sql__ __operator__ @__parameter__',
+          parameters: {'__parameter__': '__value__'},
         ),
       );
     });
@@ -43,12 +44,13 @@ void main() {
         '__value__',
         operator: '__operator__',
         columnFirst: false,
+        parameterGenerator: () => '__parameter__',
       );
       expect(
         comparison.toSql(),
         equalsSql(
-          query: '@__operator__Parameter __operator__ __sql__',
-          parameters: {'__operator__Parameter': '__value__'},
+          query: '@__parameter__ __operator__ __sql__',
+          parameters: {'__parameter__': '__value__'},
         ),
       );
     });
@@ -73,5 +75,9 @@ void main() {
         ),
       );
     });
+  });
+
+  test('generateRandomString generates string', () {
+    expect(generateRandomString(), isA<String>());
   });
 }

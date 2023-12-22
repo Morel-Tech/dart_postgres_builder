@@ -8,14 +8,17 @@ import '../../_helpers.dart';
 
 class _MockColumn extends Mock implements Column {
   @override
-  String toString() => '__colName__';
+  String toString() {
+    return '__colName__';
+  }
 }
 
 void main() {
   group('OperatorComparison', () {
     test('toSql() returns correctly', () {
       final column = _MockColumn();
-      when(() => column.parameterName).thenReturn('__paramName__');
+      when(() => column.toSql())
+          .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
 
       final comparison = OperatorComparision(
         column,
@@ -25,16 +28,16 @@ void main() {
       expect(
         comparison.toSql(),
         equalsSql(
-          query: '__colName__ __operator__ @__paramName__',
-          parameters: {'__paramName__': '__value__'},
+          query: '__sql__ __operator__ @__operator__Parameter',
+          parameters: {'__operator__Parameter': '__value__'},
         ),
       );
     });
 
     test('toSql() returns correctly when use', () {
       final column = _MockColumn();
-      when(() => column.parameterName).thenReturn('__paramName__');
-
+      when(() => column.toSql())
+          .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
       final comparison = OperatorComparision(
         column,
         '__value__',
@@ -44,8 +47,8 @@ void main() {
       expect(
         comparison.toSql(),
         equalsSql(
-          query: '@__paramName__ __operator__ __colName__',
-          parameters: {'__paramName__': '__value__'},
+          query: '@__operator__Parameter __operator__ __sql__',
+          parameters: {'__operator__Parameter': '__value__'},
         ),
       );
     });
@@ -54,6 +57,8 @@ void main() {
     test('toSql() returns correctly', () {
       final column1 = _MockColumn();
       final column2 = _MockColumn();
+      when(() => column1.toSql())
+          .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
 
       final comparison = OperatorComparision.otherColumn(
         column1,
@@ -63,7 +68,7 @@ void main() {
       expect(
         comparison.toSql(),
         equalsSql(
-          query: '__colName__ __operator__ __colName__',
+          query: '__sql__ __operator__ __colName__',
           parameters: {},
         ),
       );

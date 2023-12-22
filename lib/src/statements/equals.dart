@@ -2,7 +2,7 @@ import 'package:postgres_builder/src/statements/operator_comparison.dart';
 
 class Equals extends OperatorComparision {
   const Equals(super.column, super.value)
-      : super(operator: '=', columnFirst: false);
+      : super(operator: '=', columnFirst: true);
   const Equals.otherColumn(
     super.column1,
     super.column2,

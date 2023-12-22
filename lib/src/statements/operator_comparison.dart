@@ -24,16 +24,19 @@ class OperatorComparision implements FilterStatement {
 
   @override
   ProcessedSql toSql() {
+    final columnSql = column.toSql().query;
     if (useParameter) {
+      final parameterName = column.parameterName ?? 'parameter';
       return ProcessedSql(
         query: columnFirst
-            ? '$column $operator @${column.parameterName}'
-            : '@${column.parameterName} $operator $column',
-        parameters: {column.parameterName: value},
+            ? '$columnSql $operator @$parameterName'
+            : '@$parameterName $operator $columnSql',
+        parameters: {parameterName: value},
       );
     }
+
     return ProcessedSql(
-      query: '$column $operator $value',
+      query: '$columnSql $operator $value',
       parameters: {},
     );
   }

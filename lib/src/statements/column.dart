@@ -8,8 +8,14 @@ class Column implements SqlStatement {
     Select select, {
     required String? as,
     bool single = false,
+    bool convertToJson = true,
   }) =>
-      _NestedColumn(select, as: as, single: single);
+      _NestedColumn(
+        select,
+        as: as,
+        single: single,
+        convertToJson: convertToJson,
+      );
 
   const Column.star({this.table})
       : name = '*',
@@ -19,9 +25,11 @@ class Column implements SqlStatement {
   final String? table;
   final String? as;
 
-  String get parameterName => table != null
-      ? '${table?.camelCase}_${name?.camelCase}'.camelCase
-      : '${name?.camelCase}';
+  String? get parameterName => name == null
+      ? null
+      : table != null
+          ? '${table?.camelCase}_${name?.camelCase}'.camelCase
+          : '${name?.camelCase}';
 
   @override
   ProcessedSql toSql() {
@@ -39,18 +47,36 @@ class _NestedColumn extends Column {
   const _NestedColumn(
     this.select, {
     required this.single,
+    required this.convertToJson,
     super.as,
   }) : super._();
 
   final Select select;
   final bool single;
+  final bool convertToJson;
 
   @override
   ProcessedSql toSql() {
     final selectSql = select.toSql();
-    final query = single
-        ? '''(SELECT row_to_json($as.*) FROM (${selectSql.query}) as $as) as "$as"'''
-        : '''(SELECT COALESCE(json_agg($as.*), '[]'::json) FROM (${selectSql.query}) as $as) as "$as"''';
+    final String query;
+    if (convertToJson) {
+      if (as == null) {
+        query = single
+            ? '''(SELECT row_to_json(*) FROM (${selectSql.query}))'''
+            : '''(SELECT COALESCE(json_agg(*), '[]'::json) FROM (${selectSql.query}))''';
+      } else {
+        query = single
+            ? '''(SELECT row_to_json($as.*) FROM (${selectSql.query}) as $as) as "$as"'''
+            : '''(SELECT COALESCE(json_agg($as.*), '[]'::json) FROM (${selectSql.query}) as $as) as "$as"''';
+      }
+    } else {
+      if (as == null) {
+        query = '(${selectSql.query})';
+      } else {
+        query = '(${selectSql.query}) AS "$as"';
+      }
+    }
+
     return ProcessedSql(
       query: query,
       parameters: selectSql.parameters,

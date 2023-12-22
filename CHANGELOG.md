@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Fixed spelling on `OperatorComparision`
+- Fixed issue with `OperatorComparision` not always generating correct SQL
+
 ## 0.2.0
 
 - Added `columnFirst` parameter on `OperatorComparision`

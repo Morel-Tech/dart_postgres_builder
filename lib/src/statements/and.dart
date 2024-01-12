@@ -7,7 +7,7 @@ class And implements FilterStatement {
 
   @override
   ProcessedSql toSql() {
-    final processed = statements.map((e) => e.toSql());
+    final processed = statements.map((e) => e.toSql()).toList();
     return ProcessedSql(
       query: '(${processed.map((e) => e.query).join(' AND ')})',
       parameters: {

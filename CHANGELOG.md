@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Fixed a bug with `And` and `Or` not passing parameters correctly.
+
 ## 0.3.0
 
 - Fixed spelling on `OperatorComparision`

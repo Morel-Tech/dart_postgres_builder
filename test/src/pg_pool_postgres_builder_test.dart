@@ -1,21 +1,19 @@
 // ignore_for_file: unnecessary_lambdas
 
 import 'package:mocktail/mocktail.dart';
+import 'package:postgres/postgres.dart';
 import 'package:postgres_builder/postgres_builder.dart';
-import 'package:postgres_pool/postgres_pool.dart';
 import 'package:test/test.dart';
 
-class _MockPgPool extends Mock implements PgPool {}
+class _MockPool extends Mock implements Pool {}
 
-class _MockPgPoolStatus extends Mock implements PgPoolStatus {}
-
-class _MockPostgreSQLResult extends Mock implements PostgreSQLResult {}
+class _MockResult extends Mock implements Result {}
 
 class _MockPostgreSQLResultRow extends Mock implements PostgreSQLResultRow {}
 
 class _MockColumnDescription extends Mock implements ColumnDescription {}
 
-class _MockPgEndpoint extends Mock implements PgEndpoint {}
+class _MockEndpoint extends Mock implements Endpoint {}
 
 void main() {
   group('PgPoolPostgresBuilder', () {

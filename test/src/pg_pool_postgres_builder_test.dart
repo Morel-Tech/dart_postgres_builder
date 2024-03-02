@@ -5,60 +5,45 @@ import 'package:postgres/postgres.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 import 'package:test/test.dart';
 
-class _MockPool extends Mock implements Pool {}
+class _MockPool extends Mock implements Pool<void> {}
 
 class _MockResult extends Mock implements Result {}
 
-class _MockPostgreSQLResultRow extends Mock implements PostgreSQLResultRow {}
-
-class _MockColumnDescription extends Mock implements ColumnDescription {}
-
-class _MockEndpoint extends Mock implements Endpoint {}
+class _MockResultRow extends Mock implements ResultRow {}
 
 void main() {
   group('PgPoolPostgresBuilder', () {
+    final endpoint = Endpoint(host: 'host', database: 'database');
     test('can be instantiated', () {
-      expect(PgPoolPostgresBuilder(pgEndpoint: _MockPgEndpoint()), isNotNull);
+      expect(PgPoolPostgresBuilder(pgEndpoint: endpoint), isNotNull);
     });
 
     test('close closes connection', () async {
-      final pgPool = _MockPgPool();
+      final pgPool = _MockPool();
       when(() => pgPool.close()).thenAnswer((_) async {});
       await PgPoolPostgresBuilder(
-        connection: pgPool,
-        pgEndpoint: _MockPgEndpoint(),
+        pool: pgPool,
+        pgEndpoint: endpoint,
       ).close();
       verify(() => pgPool.close()).called(1);
     });
-    test('status returns status', () async {
-      final pgPool = _MockPgPool();
-      final status = _MockPgPoolStatus();
-      when(() => pgPool.status()).thenReturn(status);
-      expect(
-        PgPoolPostgresBuilder(
-          connection: pgPool,
-          pgEndpoint: _MockPgEndpoint(),
-        ).status,
-        status,
-      );
-    });
 
     group('runQuery', () {
-      late PgPool pgPool;
-      late PostgreSQLResult result;
+      late Pool<void> pgPool;
+      late Result result;
       late PgPoolPostgresBuilder builder;
       const sql = ProcessedSql(query: '__query__', parameters: {});
       setUp(() {
-        pgPool = _MockPgPool();
-        result = _MockPostgreSQLResult();
+        pgPool = _MockPool();
+        result = _MockResult();
         builder = PgPoolPostgresBuilder(
-          connection: pgPool,
-          pgEndpoint: _MockPgEndpoint(),
+          pool: pgPool,
+          pgEndpoint: endpoint,
         );
         when(
-          () => pgPool.query(
+          () => pgPool.execute(
             any(),
-            substitutionValues: any(named: 'substitutionValues'),
+            parameters: any(named: 'parameters'),
           ),
         ).thenAnswer((_) async => result);
       });
@@ -69,15 +54,20 @@ void main() {
         expect(builder.runQuery(sql), completion(equals([])));
       });
       test('returns the correct value', () {
-        final row = _MockPostgreSQLResultRow();
-        final column = _MockColumnDescription();
-        when(() => column.columnName).thenReturn('__columnName__');
-        when(() => result.columnDescriptions).thenReturn([column]);
+        final row = _MockResultRow();
+        final schema = ResultSchema([
+          ResultSchemaColumn(
+            typeOid: 0,
+            type: Type.text,
+            columnName: '__columnName__',
+          ),
+        ]);
+
         when(() => result.isEmpty).thenReturn(false);
         when(() => result[any()]).thenReturn(row);
         when(() => result.length).thenReturn(1);
+        when(() => result.schema).thenReturn(schema);
         when(() => row[any()]).thenReturn('__value__');
-        when(() => row.length).thenReturn(1);
 
         expect(
           builder.runQuery(sql),
@@ -88,13 +78,14 @@ void main() {
           ),
         );
       });
-      test('throws a PostgresBuilderException on PostgreSQLException', () {
+      test('throws a PostgresBuilderException on ServerException', () {
         when(
-          () => pgPool.query(
+          () => pgPool.execute(
             any(),
-            substitutionValues: any(named: 'substitutionValues'),
+            parameters: any(named: 'parameters'),
           ),
-        ).thenThrow(PostgreSQLException('__message__'));
+          // ignore: invalid_use_of_internal_member
+        ).thenThrow(ServerException('__message__'));
 
         expect(
           () => builder.runQuery(sql),

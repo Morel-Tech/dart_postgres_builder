@@ -4,7 +4,7 @@ import 'package:postgres_builder/postgres_builder.dart';
 
 Future<void> main() async {
   final builder = PgPoolPostgresBuilder(
-    pgEndpoint: PgEndpoint(
+    pgEndpoint: Endpoint(
       host: 'localhost',
       database: 'postgres',
     ),

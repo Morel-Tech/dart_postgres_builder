@@ -34,7 +34,7 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
   ) async {
     try {
       final result = await _pool.execute(
-        processed.query,
+        Sql.named(processed.query),
         parameters: processed.parameters,
       );
       if (result.isEmpty) return [];

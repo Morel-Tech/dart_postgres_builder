@@ -1,7 +1,8 @@
 /// A tool designed to make writing SQL statements easier.
 library postgres_builder;
 
-export 'package:postgres/postgres.dart' show Endpoint, Pool, PoolSettings;
+export 'package:postgres/postgres.dart'
+    show Endpoint, Pool, PoolSettings, SslMode;
 
 export 'src/pg_pool_postgres_builder.dart';
 export 'src/postgres_builder.dart';

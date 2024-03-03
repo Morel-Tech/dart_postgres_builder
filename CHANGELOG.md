@@ -1,3 +1,8 @@
+## 1.0.0
+
+- Changed `PgPoolPostgresBuilder` implementation to use `postgres` package in place of the discontinued `postgres_pool`.
+- **breaking** removed `PgPoolPostgresBuilder.status` due to this change.
+
 ## 0.3.1
 
 - Fixed a bug with `And` and `Or` not passing parameters correctly.

@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Added much more detail to errors when `ServerError` is throw on `PgPoolPostgresBuilder`
+
 ## 1.0.0
 
 - Changed `PgPoolPostgresBuilder` implementation to use `postgres` package in place of the discontinued `postgres_pool`.

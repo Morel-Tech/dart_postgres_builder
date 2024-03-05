@@ -57,7 +57,11 @@ abstract class PostgresBuilder {
     } on CheckedFromJsonException catch (e) {
       throw PostgresBuilderException(
         e.message,
-        {'key': e.key, 'badKey': e.badKey, 'map': e.map},
+        {
+          'key': e.key,
+          'badKey': e.badKey,
+          'map': e.map,
+        },
       );
     }
   }

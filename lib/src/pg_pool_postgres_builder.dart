@@ -48,7 +48,24 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
     } on ServerException catch (e) {
       throw PostgresBuilderException(
         e.message,
-        {'code': e.code, 'detail': e.detail},
+        {
+          'code': e.code,
+          'detail': e.detail,
+          'columnName': e.columnName,
+          'position': e.position,
+          'internalPosition': e.internalPosition,
+          'constraintName': e.constraintName,
+          'dataTypeName': e.dataTypeName,
+          'fileName': e.fileName,
+          'hint': e.hint,
+          'internalQuery': e.internalQuery,
+          'lineNumber': e.lineNumber,
+          'routineName': e.routineName,
+          'schemaName': e.schemaName,
+          'tableName': e.tableName,
+          'pg_trace': e.trace,
+          'pg_severity': e.severity,
+        },
       );
     }
   }

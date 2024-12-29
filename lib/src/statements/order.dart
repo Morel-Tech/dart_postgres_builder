@@ -11,7 +11,7 @@ class Order implements SqlStatement {
     return ProcessedSql(
       query: 'ORDER BY ${sortsSql.map((e) => e.query).join(', ')}',
       parameters: {
-        for (final sort in sorts) ...sort.toSql().parameters,
+        for (final sortSql in sortsSql) ...sortSql.parameters,
       },
     );
   }
@@ -27,7 +27,7 @@ class Sort implements SqlStatement {
     final columnSql = column.toSql();
     final directionSql = direction.toSql();
     return ProcessedSql(
-      query: '$columnSql ${directionSql.query}',
+      query: '${columnSql.query} ${directionSql.query}',
       parameters: {...columnSql.parameters, ...directionSql.parameters},
     );
   }

@@ -13,5 +13,8 @@
     "upsert",
     "valkey",
     "writeln"
+  ],
+  "ignorePaths": [
+    "**/*.svg"
   ]
 }

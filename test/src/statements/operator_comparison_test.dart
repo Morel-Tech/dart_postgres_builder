@@ -19,12 +19,12 @@ void main() {
       final column = _MockColumn();
       when(() => column.toSql())
           .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
+      when(() => column.parameterName).thenReturn('__parameter__');
 
-      final comparison = OperatorComparision(
+      final comparison = OperatorComparison(
         column,
         '__value__',
         operator: '__operator__',
-        parameterGenerator: () => '__parameter__',
       );
       expect(
         comparison.toSql(),
@@ -39,12 +39,12 @@ void main() {
       final column = _MockColumn();
       when(() => column.toSql())
           .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
-      final comparison = OperatorComparision(
+      when(() => column.parameterName).thenReturn('__parameter__');
+      final comparison = OperatorComparison(
         column,
         '__value__',
         operator: '__operator__',
         columnFirst: false,
-        parameterGenerator: () => '__parameter__',
       );
       expect(
         comparison.toSql(),
@@ -62,7 +62,7 @@ void main() {
       when(() => column1.toSql())
           .thenReturn(const ProcessedSql(query: '__sql__', parameters: {}));
 
-      final comparison = OperatorComparision.otherColumn(
+      final comparison = OperatorComparison.otherColumn(
         column1,
         column2,
         operator: '__operator__',

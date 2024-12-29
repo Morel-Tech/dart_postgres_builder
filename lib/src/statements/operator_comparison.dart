@@ -3,20 +3,18 @@ import 'dart:math';
 import 'package:meta/meta.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 
-class OperatorComparision implements FilterStatement {
-  const OperatorComparision(
+class OperatorComparison implements FilterStatement {
+  const OperatorComparison(
     this.column,
     this.value, {
     required this.operator,
     this.columnFirst = true,
-    @visibleForTesting this.parameterGenerator = generateRandomString,
   }) : useParameter = true;
 
-  const OperatorComparision.otherColumn(
+  const OperatorComparison.otherColumn(
     Column column1,
     Column column2, {
     required this.operator,
-    @visibleForTesting this.parameterGenerator = generateRandomString,
   })  : column = column1,
         value = column2,
         useParameter = false,
@@ -27,13 +25,12 @@ class OperatorComparision implements FilterStatement {
   final bool useParameter;
   final String operator;
   final bool columnFirst;
-  final String Function() parameterGenerator;
 
   @override
   ProcessedSql toSql() {
     final columnSql = column.toSql().query;
     if (useParameter) {
-      final parameterName = column.parameterName ?? parameterGenerator();
+      final parameterName = column.parameterName;
       return ProcessedSql(
         query: columnFirst
             ? '$columnSql $operator @$parameterName'

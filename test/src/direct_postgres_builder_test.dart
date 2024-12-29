@@ -5,7 +5,7 @@ import 'package:postgres/postgres.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 import 'package:test/test.dart';
 
-class _MockPool extends Mock implements Pool<void> {}
+class _MockConnection extends Mock implements Connection {}
 
 class _MockResult extends Mock implements Result {}
 
@@ -14,36 +14,50 @@ class _MockResultRow extends Mock implements ResultRow {}
 class _MockServerException extends Mock implements ServerException {}
 
 void main() {
-  group('PgPoolPostgresBuilder', () {
+  group('DirectPostgresBuilder', () {
     final endpoint = Endpoint(host: 'host', database: 'database');
     test('can be instantiated', () {
-      expect(PgPoolPostgresBuilder(endpoint: endpoint), isNotNull);
+      expect(DirectPostgresBuilder(), isNotNull);
+    });
+
+    test('can be initialized', () async {
+      final postgresBuilder = DirectPostgresBuilder();
+      expect(
+        postgresBuilder.initialize(
+          connectionFactory: (_, {settings}) async => _MockConnection(),
+          endpoint: endpoint,
+        ),
+        completes,
+      );
     });
 
     test('close closes connection', () async {
-      final pgPool = _MockPool();
-      when(() => pgPool.close()).thenAnswer((_) async {});
-      await PgPoolPostgresBuilder(
-        pool: pgPool,
+      final connection = _MockConnection();
+      when(() => connection.close()).thenAnswer((_) async {});
+      final postgresBuilder = DirectPostgresBuilder();
+      await postgresBuilder.initialize(
+        connectionFactory: (_, {settings}) async => connection,
         endpoint: endpoint,
-      ).close();
-      verify(() => pgPool.close()).called(1);
+      );
+      await postgresBuilder.close();
+      verify(() => connection.close()).called(1);
     });
 
     group('runQuery', () {
-      late Pool<void> pgPool;
+      late Connection connection;
       late Result result;
-      late PgPoolPostgresBuilder builder;
+      late DirectPostgresBuilder builder;
       const sql = ProcessedSql(query: '__query__', parameters: {});
-      setUp(() {
-        pgPool = _MockPool();
+      setUp(() async {
+        connection = _MockConnection();
         result = _MockResult();
-        builder = PgPoolPostgresBuilder(
-          pool: pgPool,
+        builder = DirectPostgresBuilder();
+        await builder.initialize(
+          connectionFactory: (_, {settings}) async => connection,
           endpoint: endpoint,
         );
         when(
-          () => pgPool.execute(
+          () => connection.execute(
             any(),
             parameters: any(named: 'parameters'),
           ),
@@ -85,7 +99,7 @@ void main() {
         when(() => serverException.message).thenReturn('__message__');
         when(() => serverException.severity).thenReturn(Severity.error);
         when(
-          () => pgPool.execute(
+          () => connection.execute(
             any(),
             parameters: any(named: 'parameters'),
           ),

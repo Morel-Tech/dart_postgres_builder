@@ -3,4 +3,7 @@ class PostgresBuilderException implements Exception {
 
   final String? message;
   final Map<String, dynamic>? payload;
+
+  @override
+  String toString() => 'PostgresBuilderException: $message\ndetails: $payload';
 }

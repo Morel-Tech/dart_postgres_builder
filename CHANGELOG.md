@@ -1,3 +1,11 @@
+## 2.0.0
+
+- **Breaking** Fixed spelling on `OperatorComparison`
+- **Breaking** Added `parameterName` to `Column` to make it easy to add an explicit parameter name
+- **Breaking** Changed Ordering so that you can sort each column individually
+- Added `DirectPostgresBuilder` to support direct connection to a Postgres server
+- Added `toString` method to `PostgresBuilderException`
+
 ## 1.0.1
 
 - Added much more detail to errors when `ServerError` is throw on `PgPoolPostgresBuilder`

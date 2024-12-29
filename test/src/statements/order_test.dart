@@ -14,7 +14,7 @@ void main() {
     test('toSql() returns correctly', () {
       final column = _MockColumn();
       expect(
-        Order([column]).toSql(),
+        Order([Sort(column)]).toSql(),
         equalsSql(
           query: 'ORDER BY __colName__ ASC',
           parameters: {},
@@ -26,11 +26,11 @@ void main() {
   group('SortOrder', () {
     test('toSql() returns correctly', () {
       expect(
-        SortOrder.ascending.toSql(),
+        SortDirection.ascending.toSql(),
         equalsSql(query: 'ASC', parameters: {}),
       );
       expect(
-        SortOrder.descending.toSql(),
+        SortDirection.descending.toSql(),
         equalsSql(query: 'DESC', parameters: {}),
       );
     });

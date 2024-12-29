@@ -4,6 +4,7 @@ library postgres_builder;
 export 'package:postgres/postgres.dart'
     show Endpoint, Pool, PoolSettings, SslMode;
 
+export 'src/direct_postgres_builder.dart';
 export 'src/pg_pool_postgres_builder.dart';
 export 'src/postgres_builder.dart';
 export 'src/postgres_builder_exception.dart';

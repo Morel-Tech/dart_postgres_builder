@@ -12,7 +12,7 @@ void main() {
     test('extends OperatorComparison', () {
       expect(
         Equals(_MockColumn(), '__value__'),
-        isA<OperatorComparision>()
+        isA<OperatorComparison>()
             .having((e) => e.operator, 'operator', equals('=')),
       );
     });
@@ -21,7 +21,7 @@ void main() {
     test('extends OperatorComparison', () {
       expect(
         Equals.otherColumn(_MockColumn(), _MockColumn()),
-        isA<OperatorComparision>()
+        isA<OperatorComparison>()
             .having((e) => e.operator, 'operator', equals('=')),
       );
     });

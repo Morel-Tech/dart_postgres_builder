@@ -1,39 +1,40 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 
-/// {@template pg_postgres_builder}
-/// A [PostgresBuilder] that uses a [Pool] to execute the queries.
-/// {@endtemplate}
-class PgPoolPostgresBuilder extends PostgresBuilder {
-  /// {@macro pg_postgres_builder}
-  PgPoolPostgresBuilder({
-    required Endpoint endpoint,
-    PoolSettings? poolSettings,
+class DirectPostgresBuilder extends PostgresBuilder {
+  DirectPostgresBuilder({
+    required this.endpoint,
+    this.settings,
     super.debug = false,
     super.logger,
     super.customTypeConverter,
-    @visibleForTesting Pool<void>? pool,
-  }) : _pool = pool ??
-            Pool.withEndpoints(
-              [endpoint],
-              settings: poolSettings,
-            );
+    @visibleForTesting Connection? connection,
+  }) {
+    if (connection != null) {
+      _connection = connection;
+    } else {
+      _connect();
+    }
+  }
 
-  final Pool<void> _pool;
+  late final Connection _connection;
 
-  /// Closes the [Connection]
-  Future<void> close() => _pool.close();
+  final Endpoint endpoint;
+  final ConnectionSettings? settings;
+
+  Future<void> _connect() async {
+    _connection = await Connection.open(
+      endpoint,
+      settings: settings,
+    );
+  }
 
   @override
-  Future<List<Map<String, dynamic>>> runQuery(
-    ProcessedSql processed,
-  ) async {
+  Future<List<Map<String, dynamic>>> runQuery(ProcessedSql processed) async {
     try {
-      final result = await _pool.execute(
+      final result = await _connection.execute(
         Sql.named(processed.query),
         parameters: processed.parameters,
       );
@@ -68,5 +69,9 @@ class PgPoolPostgresBuilder extends PostgresBuilder {
         },
       );
     }
+  }
+
+  Future<void> close() async {
+    await _connection.close();
   }
 }

@@ -2,8 +2,19 @@ import 'package:postgres_builder/postgres_builder.dart';
 import 'package:recase/recase.dart';
 
 class Column implements SqlStatement {
-  const Column(String columnName, {this.as, this.table}) : name = columnName;
-  const Column._({this.name, this.as, this.table});
+  const Column(
+    String columnName, {
+    this.as,
+    this.table,
+    this.customParameterName,
+  }) : name = columnName;
+
+  const Column._({
+    this.name,
+    this.as,
+    this.table,
+    this.customParameterName,
+  });
   factory Column.nested(
     Select select, {
     required String? as,
@@ -19,17 +30,22 @@ class Column implements SqlStatement {
 
   const Column.star({this.table})
       : name = '*',
-        as = null;
+        as = null,
+        customParameterName = null;
 
   final String? name;
   final String? table;
   final String? as;
+  final String? customParameterName;
 
-  String? get parameterName => name == null
-      ? null
-      : table != null
-          ? '${table?.camelCase}_${name?.camelCase}'.camelCase
-          : '${name?.camelCase}';
+  String get parameterName {
+    if (customParameterName != null) return customParameterName!;
+
+    if (name == null) throw Exception('Column name is null');
+    return table != null
+        ? '${table?.camelCase}_${name?.camelCase}'.camelCase
+        : '${name?.camelCase}';
+  }
 
   @override
   ProcessedSql toSql() {

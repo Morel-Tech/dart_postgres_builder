@@ -1,33 +1,49 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
 class Order implements SqlStatement {
-  const Order(
-    this.columns, {
-    this.sort = SortOrder.ascending,
-  });
-  final List<Column> columns;
-  final SortOrder sort;
+  const Order(this.sorts);
+
+  final List<Sort> sorts;
 
   @override
   ProcessedSql toSql() {
+    final sortsSql = sorts.map((e) => e.toSql());
     return ProcessedSql(
-      query: 'ORDER BY ${columns.join(', ')} ${sort.toSql().query}',
-      parameters: {},
+      query: 'ORDER BY ${sortsSql.map((e) => e.query).join(', ')}',
+      parameters: {
+        for (final sort in sorts) ...sort.toSql().parameters,
+      },
     );
   }
 }
 
-enum SortOrder implements SqlStatement {
+class Sort implements SqlStatement {
+  const Sort(this.column, {this.direction = SortDirection.ascending});
+  final Column column;
+  final SortDirection direction;
+
+  @override
+  ProcessedSql toSql() {
+    final columnSql = column.toSql();
+    final directionSql = direction.toSql();
+    return ProcessedSql(
+      query: '$columnSql ${directionSql.query}',
+      parameters: {...columnSql.parameters, ...directionSql.parameters},
+    );
+  }
+}
+
+enum SortDirection implements SqlStatement {
   ascending,
   descending;
 
   @override
   ProcessedSql toSql() => switch (this) {
-        SortOrder.ascending => const ProcessedSql(
+        SortDirection.ascending => const ProcessedSql(
             query: 'ASC',
             parameters: {},
           ),
-        SortOrder.descending => const ProcessedSql(
+        SortDirection.descending => const ProcessedSql(
             query: 'DESC',
             parameters: {},
           ),

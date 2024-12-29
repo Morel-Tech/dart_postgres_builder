@@ -3,7 +3,6 @@
   "enabled": true,
   "language": "en",
   "words": [
-    "Comparision",
     "endtemplate",
     "genhtml",
     "lcov",

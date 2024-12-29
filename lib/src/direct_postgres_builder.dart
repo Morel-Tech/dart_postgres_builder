@@ -5,27 +5,23 @@ import 'package:postgres_builder/postgres_builder.dart';
 
 class DirectPostgresBuilder extends PostgresBuilder {
   DirectPostgresBuilder({
-    required this.endpoint,
-    this.settings,
     super.debug = false,
     super.logger,
     super.customTypeConverter,
-    @visibleForTesting Connection? connection,
-  }) {
-    if (connection != null) {
-      _connection = connection;
-    } else {
-      _connect();
-    }
-  }
+  });
 
   late final Connection _connection;
 
-  final Endpoint endpoint;
-  final ConnectionSettings? settings;
-
-  Future<void> _connect() async {
-    _connection = await Connection.open(
+  Future<void> initialize({
+    required Endpoint endpoint,
+    ConnectionSettings? settings,
+    @visibleForTesting
+    Future<Connection> Function(
+      Endpoint endpoint, {
+      ConnectionSettings? settings,
+    })? connectionFactory,
+  }) async {
+    _connection = await (connectionFactory ?? Connection.open)(
       endpoint,
       settings: settings,
     );

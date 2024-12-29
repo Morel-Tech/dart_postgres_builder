@@ -17,16 +17,29 @@ void main() {
   group('DirectPostgresBuilder', () {
     final endpoint = Endpoint(host: 'host', database: 'database');
     test('can be instantiated', () {
-      expect(DirectPostgresBuilder(endpoint: endpoint), isNotNull);
+      expect(DirectPostgresBuilder(), isNotNull);
+    });
+
+    test('can be initialized', () async {
+      final postgresBuilder = DirectPostgresBuilder();
+      expect(
+        postgresBuilder.initialize(
+          connectionFactory: (_, {settings}) async => _MockConnection(),
+          endpoint: endpoint,
+        ),
+        completes,
+      );
     });
 
     test('close closes connection', () async {
       final connection = _MockConnection();
       when(() => connection.close()).thenAnswer((_) async {});
-      await DirectPostgresBuilder(
-        connection: connection,
+      final postgresBuilder = DirectPostgresBuilder();
+      await postgresBuilder.initialize(
+        connectionFactory: (_, {settings}) async => connection,
         endpoint: endpoint,
-      ).close();
+      );
+      await postgresBuilder.close();
       verify(() => connection.close()).called(1);
     });
 
@@ -35,11 +48,12 @@ void main() {
       late Result result;
       late DirectPostgresBuilder builder;
       const sql = ProcessedSql(query: '__query__', parameters: {});
-      setUp(() {
+      setUp(() async {
         connection = _MockConnection();
         result = _MockResult();
-        builder = DirectPostgresBuilder(
-          connection: connection,
+        builder = DirectPostgresBuilder();
+        await builder.initialize(
+          connectionFactory: (_, {settings}) async => connection,
           endpoint: endpoint,
         );
         when(

@@ -48,7 +48,7 @@ void main() {
           result.toSql(),
           equalsSql(
             query:
-                '(__column1__ < @__column1__ AND __column2__ BETWEEN @__column2___lower AND @__column2___upper)',
+                '''(__column1__ < @__column1__ AND __column2__ BETWEEN @__column2___lower AND @__column2___upper)''',
             parameters: {
               '__column1__': 10,
               '__column2___lower': 20,
@@ -82,7 +82,7 @@ void main() {
           result.toSql(),
           equalsSql(
             query:
-                '(__column1__ < @__column1__ OR __column2__ BETWEEN @__column2___lower AND @__column2___upper)',
+                '''(__column1__ < @__column1__ OR __column2__ BETWEEN @__column2___lower AND @__column2___upper)''',
             parameters: {
               '__column1__': 10,
               '__column2___lower': 20,

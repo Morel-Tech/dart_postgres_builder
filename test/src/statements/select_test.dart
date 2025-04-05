@@ -12,9 +12,9 @@ class _MockJoin extends Mock implements Join {}
 
 class _MockFilterStatement extends Mock implements FilterStatement {}
 
-class _MockOrder extends Mock implements Order {}
-
 class _MockGroup extends Mock implements Group {}
+
+class _MockSort extends Mock implements Sort {}
 
 void main() {
   group('Select', () {
@@ -73,19 +73,19 @@ void main() {
 
       test('with order is provided', () {
         final column = _MockColumn();
-        final order = _MockOrder();
+        final sort = _MockSort();
         when(() => column.toSql()).thenReturn(
           const ProcessedSql(query: '__column__', parameters: {}),
         );
-        when(() => order.toSql()).thenReturn(
+        when(() => sort.toSql()).thenReturn(
           const ProcessedSql(query: '__order__', parameters: {}),
         );
 
-        final select = Select([column], order: order, from: '__table__');
+        final select = Select([column], order: [sort], from: '__table__');
         expect(
           select.toSql(),
           equalsSql(
-            query: '''SELECT __column__ FROM __table__ __order__''',
+            query: '''SELECT __column__ FROM __table__ ORDER BY __order__''',
           ),
         );
       });

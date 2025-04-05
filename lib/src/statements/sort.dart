@@ -1,22 +1,5 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class Order implements SqlStatement {
-  const Order(this.sorts);
-
-  final List<Sort> sorts;
-
-  @override
-  ProcessedSql toSql() {
-    final sortsSql = sorts.map((e) => e.toSql());
-    return ProcessedSql(
-      query: 'ORDER BY ${sortsSql.map((e) => e.query).join(', ')}',
-      parameters: {
-        for (final sortSql in sortsSql) ...sortSql.parameters,
-      },
-    );
-  }
-}
-
 class Sort implements SqlStatement {
   const Sort(this.column, {this.direction = SortDirection.ascending});
   final Column column;
@@ -31,6 +14,8 @@ class Sort implements SqlStatement {
       parameters: {...columnSql.parameters, ...directionSql.parameters},
     );
   }
+
+  Sort operator ~() => Sort(column, direction: direction);
 }
 
 enum SortDirection implements SqlStatement {

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:meta/meta.dart';
 import 'package:postgres_builder/postgres_builder.dart';
 
-class OperatorComparison implements FilterStatement {
+class OperatorComparison extends FilterStatement {
   const OperatorComparison(
     this.column,
     this.value, {

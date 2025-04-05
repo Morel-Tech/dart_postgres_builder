@@ -1,6 +1,6 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class And implements FilterStatement {
+class And extends FilterStatement {
   const And(this.statements);
 
   final List<SqlStatement> statements;

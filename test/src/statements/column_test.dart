@@ -54,6 +54,135 @@ void main() {
         );
       });
     });
+
+    group('operators and comparison methods', () {
+      late Column column;
+
+      setUp(() {
+        column = const Column('__colName__', table: '__table__');
+      });
+
+      test('~ operator returns Not', () {
+        final result = ~column;
+        expect(result, isA<Not>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: 'NOT __table__.__colName__',
+          ),
+        );
+      });
+
+      test('equals returns Equals', () {
+        final result = column.equals('__value__');
+        expect(result, isA<Equals>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ = @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('notEquals returns NotEquals', () {
+        final result = column.notEquals('__value__');
+        expect(result, isA<NotEquals>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ != @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('greaterThan returns GreaterThan', () {
+        final result = column.greaterThan('__value__');
+        expect(result, isA<GreaterThan>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ > @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('greaterThanOrEqual returns GreaterThanOrEqual', () {
+        final result = column.greaterThanOrEqual('__value__');
+        expect(result, isA<GreaterThanOrEqual>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ >= @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('lessThan returns LessThan', () {
+        final result = column.lessThan('__value__');
+        expect(result, isA<LessThan>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ < @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('lessThanOrEqual returns LessThanOrEqual', () {
+        final result = column.lessThanOrEqual('__value__');
+        expect(result, isA<LessThanOrEqual>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ <= @tableColName',
+            parameters: {'tableColName': '__value__'},
+          ),
+        );
+      });
+
+      test('between returns Between', () {
+        final result = column.between('__lower__', '__upper__');
+        expect(result, isA<Between>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query:
+                '''__table__.__colName__ BETWEEN @tableColName_lower AND @tableColName_upper''',
+            parameters: {
+              'tableColName_lower': '__lower__',
+              'tableColName_upper': '__upper__',
+            },
+          ),
+        );
+      });
+
+      test('ascending returns Sort with default direction', () {
+        final result = column.ascending();
+        expect(result, isA<Sort>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ ASC',
+          ),
+        );
+      });
+
+      test('descending returns Sort with descending direction', () {
+        final result = column.descending();
+        expect(result, isA<Sort>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ DESC',
+          ),
+        );
+      });
+    });
   });
   group('Column.star()', () {
     group('toSql', () {

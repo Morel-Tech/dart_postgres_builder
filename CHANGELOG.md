@@ -1,3 +1,10 @@
+## 2.1.0
+
+- Added `Between` to support `BETWEEN` clauses
+- Added a bunch of helper functions to `Column` to make it easier to use
+- Added & and | operators to FilterStatement to make it easier to group
+
+
 ## 2.0.0
 
 - **Breaking** Fixed spelling on `OperatorComparison`

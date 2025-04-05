@@ -1,10 +1,10 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class In implements FilterStatement {
+class In<T> extends FilterStatement {
   const In(this.column, this.values);
 
   final Column column;
-  final List<dynamic> values;
+  final List<T> values;
 
   @override
   ProcessedSql toSql() {

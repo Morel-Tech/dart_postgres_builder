@@ -26,4 +26,23 @@ void main() {
       );
     });
   });
+
+  group('NotEquals', () {
+    test('extends OperatorComparison', () {
+      expect(
+        NotEquals(_MockColumn(), '__value__'),
+        isA<OperatorComparison>()
+            .having((e) => e.operator, 'operator', equals('!=')),
+      );
+    });
+  });
+  group('NotEquals.otherColumn', () {
+    test('extends OperatorComparison', () {
+      expect(
+        NotEquals.otherColumn(_MockColumn(), _MockColumn()),
+        isA<OperatorComparison>()
+            .having((e) => e.operator, 'operator', equals('!=')),
+      );
+    });
+  });
 }

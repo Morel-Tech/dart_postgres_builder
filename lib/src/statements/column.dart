@@ -9,6 +9,11 @@ class Column implements SqlStatement {
     this.customParameterName,
   }) : name = columnName;
 
+  const Column.star({this.table})
+      : name = '*',
+        as = null,
+        customParameterName = null;
+
   const Column._({
     this.name,
     this.as,
@@ -27,11 +32,6 @@ class Column implements SqlStatement {
         single: single,
         convertToJson: convertToJson,
       );
-
-  const Column.star({this.table})
-      : name = '*',
-        as = null,
-        customParameterName = null;
 
   final String? name;
   final String? table;
@@ -57,6 +57,24 @@ class Column implements SqlStatement {
 
   @override
   String toString() => table != null ? '$table.$name' : '$name';
+
+  // ignore: use_to_and_as_if_applicable
+  FilterStatement operator ~() => Not(this);
+
+  Equals equals(dynamic other) => Equals(this, other);
+  NotEquals notEquals(dynamic other) => NotEquals(this, other);
+  GreaterThan greaterThan(dynamic other) => GreaterThan(this, other);
+  GreaterThanOrEqual greaterThanOrEqual(dynamic other) =>
+      GreaterThanOrEqual(this, other);
+  LessThan lessThan(dynamic other) => LessThan(this, other);
+  LessThanOrEqual lessThanOrEqual(dynamic other) =>
+      LessThanOrEqual(this, other);
+  Between between(dynamic lowerValue, dynamic upperValue) =>
+      Between(this, lowerValue, upperValue);
+
+  // ignore: use_to_and_as_if_applicable
+  Sort ascending() => Sort(this);
+  Sort descending() => Sort(this, direction: SortDirection.descending);
 }
 
 class _NestedColumn extends Column {

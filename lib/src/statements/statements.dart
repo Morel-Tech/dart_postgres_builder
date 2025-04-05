@@ -1,5 +1,6 @@
 export 'and.dart';
 export 'column.dart';
+export 'comparisons.dart';
 export 'delete.dart';
 export 'equals.dart';
 export 'group.dart';
@@ -9,8 +10,8 @@ export 'join.dart';
 export 'not.dart';
 export 'operator_comparison.dart';
 export 'or.dart';
-export 'order.dart';
 export 'select.dart';
+export 'sort.dart';
 export 'sql_statement.dart';
 export 'update.dart';
 export 'upsert.dart';

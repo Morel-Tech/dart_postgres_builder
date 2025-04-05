@@ -1,15 +1,16 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class Not implements FilterStatement {
+class Not extends FilterStatement {
   const Not(this.column);
 
   final Column column;
 
   @override
   ProcessedSql toSql() {
+    final columnSql = column.toSql();
     return ProcessedSql(
-      query: 'NOT $column',
-      parameters: {},
+      query: 'NOT ${columnSql.query}',
+      parameters: columnSql.parameters,
     );
   }
 }

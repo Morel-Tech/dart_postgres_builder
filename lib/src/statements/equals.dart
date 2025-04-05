@@ -8,3 +8,12 @@ class Equals extends OperatorComparison {
     super.column2,
   ) : super.otherColumn(operator: '=');
 }
+
+class NotEquals extends OperatorComparison {
+  const NotEquals(super.column, super.value)
+      : super(operator: '!=', columnFirst: true);
+  const NotEquals.otherColumn(
+    super.column1,
+    super.column2,
+  ) : super.otherColumn(operator: '!=');
+}

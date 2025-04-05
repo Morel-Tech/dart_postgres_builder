@@ -14,7 +14,7 @@ class Select implements SqlStatement {
   final List<SqlStatement> columns;
   final String table;
   final FilterStatement? where;
-  final Order? order;
+  final List<Sort>? order;
   final int? limit;
   final Group? group;
   final List<Join>? join;
@@ -36,7 +36,8 @@ class Select implements SqlStatement {
         processedWhere.query,
       ],
       if (group != null) group!.toSql().query,
-      if (order != null) order!.toSql().query,
+      if (order != null)
+        'ORDER BY ${order!.map((e) => e.toSql().query).join(', ')}',
       if (limit != null) 'LIMIT $limit',
     ].join(' ');
 
@@ -47,6 +48,8 @@ class Select implements SqlStatement {
         for (final column in columns) ...column.toSql().parameters,
         if (join != null)
           for (final currentJoin in join!) ...currentJoin.toSql().parameters,
+        if (order != null)
+          for (final currentOrder in order!) ...currentOrder.toSql().parameters,
       },
     );
   }

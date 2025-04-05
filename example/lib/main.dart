@@ -11,11 +11,17 @@ Future<void> main() async {
   );
 
   final users = await builder.mappedQuery(
-    const Select(
+    Select(
       [
-        Column.star(),
+        const Column.star(),
       ],
       from: 'users',
+      where: (const Column('name').equals('John') &
+                  const Column('age').equals(20)) &
+              const Column('age').between(18, 25) |
+          (const Column('name').lessThan('Jane') &
+              const Column('age').greaterThan(25)),
+      order: [const Column('age').ascending()],
     ),
     fromJson: User.fromJson,
   );

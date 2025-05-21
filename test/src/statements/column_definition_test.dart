@@ -153,7 +153,8 @@ void main() {
             generated: 'price * qty',
           ).toSql(),
           equalsSql(
-            query: 'total INTEGER GENERATED ALWAYS AS (price * qty) VIRTUAL',
+            query:
+                '''total INTEGER GENERATED ALWAYS AS (price * qty) VIRTUAL NOT NULL''',
           ),
         );
       });
@@ -166,7 +167,8 @@ void main() {
             isStored: true,
           ).toSql(),
           equalsSql(
-            query: 'total INTEGER GENERATED ALWAYS AS (price * qty) STORED',
+            query:
+                '''total INTEGER GENERATED ALWAYS AS (price * qty) STORED NOT NULL''',
           ),
         );
       });

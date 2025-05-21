@@ -21,8 +21,8 @@ class CreateTable extends SqlStatement {
     }
     query.write('$name (');
     final mappedQuery = columns.map((e) => e.toSql());
-    for (final column in mappedQuery) {
-      final isLast = column == mappedQuery.last;
+    for (final (index, column) in mappedQuery.indexed) {
+      final isLast = index == mappedQuery.length - 1;
       query.write(column.query);
       if (!isLast) {
         query.write(', ');

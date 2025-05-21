@@ -1,7 +1,10 @@
 export 'and.dart';
 export 'column.dart';
+export 'column_definition.dart';
 export 'comparisons.dart';
+export 'create_table.dart';
 export 'delete.dart';
+export 'drop_table.dart';
 export 'equals.dart';
 export 'group.dart';
 export 'in.dart';

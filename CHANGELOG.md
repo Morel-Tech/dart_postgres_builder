@@ -1,3 +1,8 @@
+## 2.2.0
+
+- Added `CreateTable` to support `CREATE TABLE` statements
+- Added `DropTable` to support `DROP TABLE` statements
+
 ## 2.1.0
 
 - Added `Between` to support `BETWEEN` clauses

@@ -73,13 +73,6 @@ class ColumnDefinition implements SqlStatement {
         } else if (defaultValue!.toLowerCase() == 'true' ||
             defaultValue!.toLowerCase() == 'false') {
           query.write(defaultValue!.toUpperCase());
-        } else if (defaultValue!.startsWith("'") &&
-            defaultValue!.endsWith("'")) {
-          // Already quoted string
-          query.write(defaultValue);
-        } else if (defaultValue!.contains(RegExp('[^a-zA-Z0-9_]'))) {
-          // Contains special characters, needs quoting
-          query.write("'${defaultValue!.replaceAll("'", "''")}'");
         } else {
           // Simple value, no quoting needed
           query.write(defaultValue);

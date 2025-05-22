@@ -129,7 +129,7 @@ void main() {
             type: 'TEXT',
             defaultValue: "bar's baz",
           ).toSql(),
-          equalsSql(query: "foo TEXT DEFAULT 'bar''s baz' NOT NULL"),
+          equalsSql(query: "foo TEXT DEFAULT bar's baz NOT NULL"),
         );
       });
       test('string with only safe chars', () {

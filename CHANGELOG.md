@@ -1,3 +1,7 @@
+## 2.2.1
+- Exported `ConnectionSettings`
+- Fixed `ColumnDefinition` to not automatically quote default values
+
 ## 2.2.0
 
 - Added `CreateTable` to support `CREATE TABLE` statements

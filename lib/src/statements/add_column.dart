@@ -1,28 +1,26 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class AddColumn extends SqlStatement {
+class AddColumn extends AlterTableOperation {
   AddColumn({
-    required this.table,
     required this.column,
     this.ifNotExists = false,
   });
-  final String table;
+
   final ColumnDefinition column;
   final bool ifNotExists;
 
   @override
   ProcessedSql toSql() {
     final columnSql = column.toSql();
-    final query = StringBuffer('ALTER TABLE $table ADD COLUMN ');
+    final buffer = StringBuffer('ADD COLUMN ');
     if (ifNotExists) {
-      query.write('IF NOT EXISTS ');
+      buffer.write('IF NOT EXISTS ');
     }
-    query.write('${columnSql.query};');
+    buffer.write(columnSql.query);
+
     return ProcessedSql(
-      query: query.toString(),
-      parameters: {
-        ...columnSql.parameters,
-      },
+      query: buffer.toString(),
+      parameters: columnSql.parameters,
     );
   }
 }

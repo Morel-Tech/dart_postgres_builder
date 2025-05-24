@@ -4,11 +4,11 @@ import 'package:test/test.dart';
 import '../../_helpers.dart';
 
 void main() {
-  group('DropColumn', () {
+  group('$DropColumn', () {
     test('toSql returns correctly without ifExists', () {
-      final statement = DropColumn(
+      final statement = AlterTable(
         table: 'users',
-        column: 'age',
+        operations: [DropColumn(column: 'age')],
       );
       expect(
         statement.toSql(),
@@ -20,10 +20,9 @@ void main() {
     });
 
     test('toSql returns correctly with ifExists', () {
-      final statement = DropColumn(
+      final statement = AlterTable(
         table: 'users',
-        column: 'email',
-        ifExists: true,
+        operations: [DropColumn(column: 'email', ifExists: true)],
       );
       expect(
         statement.toSql(),
@@ -35,14 +34,31 @@ void main() {
     });
 
     test('toSql returns correctly for a different table and column', () {
-      final statement = DropColumn(
+      final statement = AlterTable(
         table: 'products',
-        column: 'price',
+        operations: [DropColumn(column: 'price')],
       );
       expect(
         statement.toSql(),
         equalsSql(
           query: 'ALTER TABLE products DROP COLUMN price;',
+          parameters: {},
+        ),
+      );
+    });
+
+    test('toSql returns correctly with multiple columns', () {
+      final statement = AlterTable(
+        table: 'users',
+        operations: [
+          DropColumn(column: 'age'),
+          DropColumn(column: 'email'),
+        ],
+      );
+      expect(
+        statement.toSql(),
+        equalsSql(
+          query: 'ALTER TABLE users DROP COLUMN age, DROP COLUMN email;',
           parameters: {},
         ),
       );

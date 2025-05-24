@@ -1,24 +1,27 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class DropColumn extends SqlStatement {
+class DropColumn extends AlterTableOperation {
   DropColumn({
-    required this.table,
     required this.column,
     this.ifExists = false,
   });
-  final String table;
-  final String column;
+
+  String column;
   final bool ifExists;
 
   @override
   ProcessedSql toSql() {
-    final query = StringBuffer('ALTER TABLE $table DROP COLUMN ');
+    final queries = <String>[];
+
+    final buffer = StringBuffer('DROP COLUMN ');
     if (ifExists) {
-      query.write('IF EXISTS ');
+      buffer.write('IF EXISTS ');
     }
-    query.write('$column;');
+    buffer.write(column);
+    queries.add(buffer.toString());
+
     return ProcessedSql(
-      query: query.toString(),
+      query: buffer.toString(),
       parameters: {},
     );
   }

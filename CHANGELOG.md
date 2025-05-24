@@ -1,3 +1,8 @@
+## 2.3.0
+
+- Added `AddColumn` to support `ADD COLUMN` statements
+- Added `DropColumn` to support `DROP COLUMN` statements
+
 ## 2.2.1
 - Exported `ConnectionSettings`
 - Fixed `ColumnDefinition` to not automatically quote default values

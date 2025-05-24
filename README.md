@@ -42,4 +42,4 @@ For all available methods, just add `raw` to the name to pass in a raw SQL strin
 [very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
 [ci_badge]: https://github.com/Morel-Tech/dart_postgres_builder/actions/workflows/postgres_builder_verify_and_test.yaml/badge.svg?branch=main
 [ci_link]: https://github.com/Morel-Tech/dart_postgres_builder/actions/workflows/postgres_builder_verify_and_test.yaml
-[coverage_badge]: https://raw.githubusercontent.com/VeryGoodOpenSource/dart_frog/main/packages/dart_frog/coverage_badge.svg
+[coverage_badge]: https://img.shields.io/badge/coverage-100%25-brightgreen

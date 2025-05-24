@@ -11,14 +11,11 @@ class DropColumn extends SqlStatement {
 
   @override
   ProcessedSql toSql() {
-    final queries = <String>[];
-
     final buffer = StringBuffer('DROP COLUMN ');
     if (ifExists) {
       buffer.write('IF EXISTS ');
     }
     buffer.write(column);
-    queries.add(buffer.toString());
 
     return ProcessedSql(
       query: buffer.toString(),

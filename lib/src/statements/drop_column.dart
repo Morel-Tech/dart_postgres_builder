@@ -6,7 +6,7 @@ class DropColumn extends SqlStatement {
     this.ifExists = false,
   });
 
-  String column;
+  final String column;
   final bool ifExists;
 
   @override

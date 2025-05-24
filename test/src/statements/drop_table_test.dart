@@ -9,7 +9,7 @@ void main() {
       expect(
         const DropTable(name: '__table__').toSql(),
         equalsSql(
-          query: 'DROP TABLE __table__;',
+          query: 'DROP TABLE __table__',
           parameters: {},
         ),
       );
@@ -19,7 +19,7 @@ void main() {
       expect(
         const DropTable(name: '__table__', ifExists: true).toSql(),
         equalsSql(
-          query: 'DROP TABLE IF EXISTS __table__;',
+          query: 'DROP TABLE IF EXISTS __table__',
           parameters: {},
         ),
       );

@@ -1,3 +1,8 @@
+## 2.3.0
+
+- Added `AlterTable` to support `ALTER TABLE` statements
+- Added `AlterColumn` to support `ALTER COLUMN` statements, along with a bunch of other column operations
+
 ## 2.2.1
 - Exported `ConnectionSettings`
 - Fixed `ColumnDefinition` to not automatically quote default values

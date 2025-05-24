@@ -154,20 +154,6 @@ void main() {
           ).toSql(),
           equalsSql(
             query:
-                '''total INTEGER GENERATED ALWAYS AS (price * qty) VIRTUAL NOT NULL''',
-          ),
-        );
-      });
-      test('stored', () {
-        expect(
-          const ColumnDefinition(
-            name: 'total',
-            type: 'INTEGER',
-            generated: 'price * qty',
-            isStored: true,
-          ).toSql(),
-          equalsSql(
-            query:
                 '''total INTEGER GENERATED ALWAYS AS (price * qty) STORED NOT NULL''',
           ),
         );

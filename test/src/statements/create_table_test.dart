@@ -19,7 +19,7 @@ void main() {
         statement.toSql(),
         equalsSql(
           query:
-              '''CREATE TABLE IF NOT EXISTS users (id SERIAL NOT NULL PRIMARY KEY, name TEXT NOT NULL);''',
+              '''CREATE TABLE IF NOT EXISTS users (id SERIAL NOT NULL PRIMARY KEY, name TEXT NOT NULL)''',
           parameters: {},
         ),
       );

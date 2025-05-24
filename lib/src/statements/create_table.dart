@@ -28,7 +28,7 @@ class CreateTable extends SqlStatement {
         query.write(', ');
       }
     }
-    query.write(');');
+    query.write(')');
     return ProcessedSql(
       query: query.toString(),
       parameters: {

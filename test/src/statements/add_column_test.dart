@@ -14,7 +14,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users ADD COLUMN age INTEGER NOT NULL;',
+          query: 'ALTER TABLE users ADD COLUMN age INTEGER NOT NULL',
           parameters: {},
         ),
       );
@@ -30,7 +30,7 @@ void main() {
         statement.toSql(),
         equalsSql(
           query:
-              'ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT NOT NULL;',
+              'ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT NOT NULL',
           parameters: {},
         ),
       );
@@ -50,7 +50,7 @@ void main() {
         statement.toSql(),
         equalsSql(
           query:
-              '''ALTER TABLE users ADD COLUMN age INTEGER NOT NULL, ADD COLUMN email TEXT NOT NULL;''',
+              '''ALTER TABLE users ADD COLUMN age INTEGER NOT NULL, ADD COLUMN email TEXT NOT NULL''',
           parameters: {},
         ),
       );

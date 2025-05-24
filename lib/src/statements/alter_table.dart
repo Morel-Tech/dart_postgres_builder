@@ -7,7 +7,7 @@ class AlterTable extends SqlStatement {
   });
 
   final String table;
-  final List<AlterTableOperation> operations;
+  final List<SqlStatement> operations;
 
   @override
   ProcessedSql toSql() {
@@ -19,8 +19,8 @@ class AlterTable extends SqlStatement {
       parameters.addAll(opSql.parameters);
     }
     final query = operations.isNotEmpty
-        ? 'ALTER TABLE $table ${queries.join(', ')};'
-        : 'ALTER TABLE $table;';
+        ? 'ALTER TABLE $table ${queries.join(', ')}'
+        : 'ALTER TABLE $table';
     return ProcessedSql(
       query: query,
       parameters: parameters,

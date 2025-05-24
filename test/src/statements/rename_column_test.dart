@@ -24,7 +24,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users RENAME COLUMN username TO user_name;',
+          query: 'ALTER TABLE users RENAME COLUMN username TO user_name',
           parameters: {},
         ),
       );
@@ -43,7 +43,7 @@ void main() {
         statement.toSql(),
         equalsSql(
           query:
-              '''ALTER TABLE users RENAME COLUMN username TO user_name, RENAME COLUMN email TO contact_email;''',
+              '''ALTER TABLE users RENAME COLUMN username TO user_name, RENAME COLUMN email TO contact_email''',
           parameters: {},
         ),
       );

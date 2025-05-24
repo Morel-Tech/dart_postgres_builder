@@ -1,6 +1,6 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class DropColumn extends AlterTableOperation {
+class DropColumn extends SqlStatement {
   DropColumn({
     required this.column,
     this.ifExists = false,

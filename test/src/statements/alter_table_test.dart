@@ -6,7 +6,7 @@ import '../../_helpers.dart';
 void main() {
   group('$AlterTable', () {
     test('toSql returns correctly with a single operation', () {
-      final operation = SetColumnNotNull(column: 'age');
+      final operation = RenameTable(newName: 'users_new');
       final statement = AlterTable(
         table: 'users',
         operations: [operation],
@@ -14,16 +14,16 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users ALTER COLUMN age SET NOT NULL;',
+          query: 'ALTER TABLE users RENAME TO users_new',
           parameters: {},
         ),
       );
     });
 
     test('toSql returns correctly with multiple operations', () {
-      final op1 = SetColumnNotNull(column: 'age');
+      final op1 = RenameTable(newName: 'users_new');
       final op2 = RenameColumn(column: 'username', newName: 'user_name');
-      final op3 = DropColumnDefault(column: 'email');
+      final op3 = RenameTable(newName: 'users_new_2');
       final statement = AlterTable(
         table: 'users',
         operations: [op1, op2, op3],
@@ -32,7 +32,7 @@ void main() {
         statement.toSql(),
         equalsSql(
           query:
-              '''ALTER TABLE users ALTER COLUMN age SET NOT NULL, RENAME COLUMN username TO user_name, ALTER COLUMN email DROP DEFAULT;''',
+              '''ALTER TABLE users RENAME TO users_new, RENAME COLUMN username TO user_name, RENAME TO users_new_2''',
           parameters: {},
         ),
       );
@@ -46,7 +46,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users;',
+          query: 'ALTER TABLE users',
           parameters: {},
         ),
       );

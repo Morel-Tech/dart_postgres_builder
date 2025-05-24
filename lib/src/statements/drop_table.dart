@@ -15,7 +15,7 @@ class DropTable extends SqlStatement {
     if (ifExists) {
       query.write('IF EXISTS ');
     }
-    query.write('$name;');
+    query.write(name);
     return ProcessedSql(
       query: query.toString(),
       parameters: {},

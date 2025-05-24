@@ -4,13 +4,13 @@ import 'package:test/test.dart';
 import '../../_helpers.dart';
 
 void main() {
-  group('$DropColumnNotNull', () {
+  group('$DropDefault', () {
     test('toSql returns correctly for a single column', () {
-      final operation = DropColumnNotNull(column: 'age');
+      final operation = DropDefault();
       expect(
         operation.toSql(),
         equalsSql(
-          query: 'ALTER COLUMN age DROP NOT NULL',
+          query: 'DROP DEFAULT',
           parameters: {},
         ),
       );
@@ -19,32 +19,33 @@ void main() {
     test('toSql integrates correctly with AlterTable', () {
       final statement = AlterTable(
         table: 'users',
-        operations: [DropColumnNotNull(column: 'email')],
+        operations: [
+          AlterColumn(column: 'email', operations: [DropDefault()]),
+        ],
       );
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users ALTER COLUMN email DROP NOT NULL;',
+          query: 'ALTER TABLE users ALTER COLUMN email DROP DEFAULT',
           parameters: {},
         ),
       );
     });
 
-    test(
-        'toSql integrates correctly with multiple DropColumnNotNull operations',
+    test('toSql integrates correctly with multiple $DropDefault operations',
         () {
       final statement = AlterTable(
         table: 'users',
         operations: [
-          DropColumnNotNull(column: 'age'),
-          DropColumnNotNull(column: 'email'),
+          AlterColumn(column: 'age', operations: [DropDefault()]),
+          AlterColumn(column: 'email', operations: [DropDefault()]),
         ],
       );
       expect(
         statement.toSql(),
         equalsSql(
           query:
-              '''ALTER TABLE users ALTER COLUMN age DROP NOT NULL, ALTER COLUMN email DROP NOT NULL;''',
+              '''ALTER TABLE users ALTER COLUMN age DROP DEFAULT, ALTER COLUMN email DROP DEFAULT''',
           parameters: {},
         ),
       );

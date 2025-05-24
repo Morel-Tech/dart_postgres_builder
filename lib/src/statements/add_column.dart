@@ -1,6 +1,6 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
-class AddColumn extends AlterTableOperation {
+class AddColumn extends SqlStatement {
   AddColumn({
     required this.column,
     this.ifNotExists = false,

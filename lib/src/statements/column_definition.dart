@@ -17,7 +17,6 @@ class ColumnDefinition implements SqlStatement {
     this.references,
     this.collate,
     this.generated,
-    this.isStored = false,
   });
 
   /// The name of the column.
@@ -53,17 +52,12 @@ class ColumnDefinition implements SqlStatement {
   /// The expression for a generated column.
   final String? generated;
 
-  /// Whether a generated column is STORED (true) or VIRTUAL (false).
-  final bool isStored;
-
   @override
   ProcessedSql toSql() {
     final query = StringBuffer('$name $type');
 
     if (generated != null) {
-      query
-        ..write(' GENERATED ALWAYS AS ($generated)')
-        ..write(isStored ? ' STORED' : ' VIRTUAL');
+      query.write(' GENERATED ALWAYS AS ($generated) STORED');
     } else {
       if (defaultValue != null) {
         query.write(' DEFAULT ');

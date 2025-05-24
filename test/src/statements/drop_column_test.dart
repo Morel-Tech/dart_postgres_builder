@@ -13,7 +13,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users DROP COLUMN age;',
+          query: 'ALTER TABLE users DROP COLUMN age',
           parameters: {},
         ),
       );
@@ -27,7 +27,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users DROP COLUMN IF EXISTS email;',
+          query: 'ALTER TABLE users DROP COLUMN IF EXISTS email',
           parameters: {},
         ),
       );
@@ -41,7 +41,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE products DROP COLUMN price;',
+          query: 'ALTER TABLE products DROP COLUMN price',
           parameters: {},
         ),
       );
@@ -58,7 +58,7 @@ void main() {
       expect(
         statement.toSql(),
         equalsSql(
-          query: 'ALTER TABLE users DROP COLUMN age, DROP COLUMN email;',
+          query: 'ALTER TABLE users DROP COLUMN age, DROP COLUMN email',
           parameters: {},
         ),
       );

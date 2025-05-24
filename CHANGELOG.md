@@ -1,7 +1,7 @@
 ## 2.3.0
 
-- Added `AddColumn` to support `ADD COLUMN` statements
-- Added `DropColumn` to support `DROP COLUMN` statements
+- Added `AlterTable` to support `ALTER TABLE` statements
+- Added `AlterColumn` to support `ALTER COLUMN` statements, along with a bunch of other column operations
 
 ## 2.2.1
 - Exported `ConnectionSettings`

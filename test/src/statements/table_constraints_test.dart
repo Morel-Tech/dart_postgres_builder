@@ -165,6 +165,22 @@ void main() {
           ),
         );
       });
+
+      test('non-const constructor covers super call', () {
+        const fkConstraint = ForeignKeyConstraint(
+          columns: ['user_id'],
+          referencesTable: 'users',
+          referencesColumns: ['id'],
+        );
+        const constraint = ForeignKeyTableConstraint(fkConstraint);
+        expect(
+          constraint.toSql(),
+          equalsSql(
+            query: 'FOREIGN KEY (user_id) REFERENCES users (id)',
+            parameters: {},
+          ),
+        );
+      });
     });
 
     group('Mixed constraints in CreateTable', () {

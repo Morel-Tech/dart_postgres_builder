@@ -1,5 +1,17 @@
 import 'package:postgres_builder/postgres_builder.dart';
 
+/// Referential actions for foreign key constraints.
+enum ReferentialAction {
+  cascade('CASCADE'),
+  setNull('SET NULL'),
+  setDefault('SET DEFAULT'),
+  restrict('RESTRICT'),
+  noAction('NO ACTION');
+
+  const ReferentialAction(this.sql);
+  final String sql;
+}
+
 /// {@template column_definition}
 /// A column in a table.
 /// {@endtemplate}
@@ -15,6 +27,8 @@ class ColumnDefinition implements SqlStatement {
     this.autoIncrement = false,
     this.check,
     this.references,
+    this.onDelete,
+    this.onUpdate,
     this.collate,
     this.generated,
   });
@@ -45,6 +59,12 @@ class ColumnDefinition implements SqlStatement {
 
   /// A foreign key reference in the format 'table(column)'.
   final String? references;
+
+  /// The action to take when the referenced row is deleted.
+  final ReferentialAction? onDelete;
+
+  /// The action to take when the referenced row is updated.
+  final ReferentialAction? onUpdate;
 
   /// The collation to use for the column.
   final String? collate;
@@ -96,6 +116,14 @@ class ColumnDefinition implements SqlStatement {
 
     if (references != null) {
       query.write(' REFERENCES $references');
+
+      if (onDelete != null) {
+        query.write(' ON DELETE ${onDelete!.sql}');
+      }
+
+      if (onUpdate != null) {
+        query.write(' ON UPDATE ${onUpdate!.sql}');
+      }
     }
 
     if (collate != null) {

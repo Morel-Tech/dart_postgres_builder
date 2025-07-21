@@ -63,6 +63,96 @@ void main() {
       );
     });
 
+    test('toSql with references and onDelete CASCADE', () {
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          references: 'users(id)',
+          onDelete: ReferentialAction.cascade,
+        ).toSql(),
+        equalsSql(
+          query:
+              'user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE',
+        ),
+      );
+    });
+
+    test('toSql with references and onUpdate SET NULL', () {
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          references: 'users(id)',
+          onUpdate: ReferentialAction.setNull,
+        ).toSql(),
+        equalsSql(
+          query:
+              '''user_id INTEGER NOT NULL REFERENCES users(id) ON UPDATE SET NULL''',
+        ),
+      );
+    });
+
+    test('toSql with references, onDelete CASCADE and onUpdate SET DEFAULT',
+        () {
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          references: 'users(id)',
+          onDelete: ReferentialAction.cascade,
+          onUpdate: ReferentialAction.setDefault,
+        ).toSql(),
+        equalsSql(
+          query:
+              '''user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE SET DEFAULT''',
+        ),
+      );
+    });
+
+    test('toSql with references and onDelete RESTRICT', () {
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          references: 'users(id)',
+          onDelete: ReferentialAction.restrict,
+        ).toSql(),
+        equalsSql(
+          query:
+              '''user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT''',
+        ),
+      );
+    });
+
+    test('toSql with references and onUpdate NO ACTION', () {
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          references: 'users(id)',
+          onUpdate: ReferentialAction.noAction,
+        ).toSql(),
+        equalsSql(
+          query:
+              '''user_id INTEGER NOT NULL REFERENCES users(id) ON UPDATE NO ACTION''',
+        ),
+      );
+    });
+
+    test('onDelete/onUpdate only work with references', () {
+      // Should not include ON DELETE/ON UPDATE if references is null
+      expect(
+        const ColumnDefinition(
+          name: 'user_id',
+          type: 'INTEGER',
+          onDelete: ReferentialAction.cascade,
+          onUpdate: ReferentialAction.setNull,
+        ).toSql(),
+        equalsSql(query: 'user_id INTEGER NOT NULL'),
+      );
+    });
+
     test('toSql with collate', () {
       expect(
         const ColumnDefinition(name: 'name', type: 'TEXT', collate: 'en_US')
@@ -160,7 +250,7 @@ void main() {
       });
     });
 
-    test('toSql with all modifiers', () {
+    test('toSql with all modifiers including referential actions', () {
       expect(
         const ColumnDefinition(
           name: 'id',
@@ -172,11 +262,13 @@ void main() {
           autoIncrement: true,
           check: 'id > 0',
           references: 'other(id)',
+          onDelete: ReferentialAction.cascade,
+          onUpdate: ReferentialAction.setNull,
           collate: 'en_US',
         ).toSql(),
         equalsSql(
           query:
-              '''id INTEGER DEFAULT 42 GENERATED ALWAYS AS IDENTITY PRIMARY KEY UNIQUE CHECK (id > 0) REFERENCES other(id) COLLATE en_US''',
+              '''id INTEGER DEFAULT 42 GENERATED ALWAYS AS IDENTITY PRIMARY KEY UNIQUE CHECK (id > 0) REFERENCES other(id) ON DELETE CASCADE ON UPDATE SET NULL COLLATE en_US''',
         ),
       );
     });

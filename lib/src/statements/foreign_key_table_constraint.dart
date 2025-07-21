@@ -9,7 +9,7 @@ class ForeignKeyTableConstraint extends TableConstraint {
   /// {@macro foreign_key_table_constraint}
   const ForeignKeyTableConstraint(
     this.foreignKeyConstraint,
-  ) : super(name: null); // Name is handled by the wrapped constraint
+  ) : super(name: null);
 
   /// The wrapped ForeignKeyConstraint.
   final ForeignKeyConstraint foreignKeyConstraint;

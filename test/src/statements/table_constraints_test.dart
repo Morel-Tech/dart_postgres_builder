@@ -173,6 +173,10 @@ void main() {
           referencesColumns: ['id'],
         );
         const constraint = ForeignKeyTableConstraint(fkConstraint);
+
+        // Access the name property to ensure the constructor chain is executed
+        expect(constraint.name, isNull);
+
         expect(
           constraint.toSql(),
           equalsSql(
@@ -180,6 +184,30 @@ void main() {
             parameters: {},
           ),
         );
+      });
+
+      test('constructor with runtime foreign key constraint', () {
+        // Create a runtime-constructed foreign key constraint
+        final columns = <String>['user_id'];
+        final referencesColumns = <String>['id'];
+        final fkConstraint = ForeignKeyConstraint(
+          columns: columns,
+          referencesTable: 'users',
+          referencesColumns: referencesColumns,
+        );
+
+        // Create the table constraint at runtime
+        final constraint = ForeignKeyTableConstraint(fkConstraint);
+
+        // Verify the constraint properties
+        expect(constraint.name, isNull);
+        expect(constraint.foreignKeyConstraint, equals(fkConstraint));
+
+        // Verify SQL generation
+        final result = constraint.toSql();
+        expect(result.query,
+            equals('FOREIGN KEY (user_id) REFERENCES users (id)'));
+        expect(result.parameters, isEmpty);
       });
     });
 

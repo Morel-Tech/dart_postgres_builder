@@ -205,8 +205,10 @@ void main() {
 
         // Verify SQL generation
         final result = constraint.toSql();
-        expect(result.query,
-            equals('FOREIGN KEY (user_id) REFERENCES users (id)'));
+        expect(
+          result.query,
+          equals('FOREIGN KEY (user_id) REFERENCES users (id)'),
+        );
         expect(result.parameters, isEmpty);
       });
     });

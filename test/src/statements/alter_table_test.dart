@@ -51,5 +51,65 @@ void main() {
         ),
       );
     });
+
+    test('toSql returns correctly when adding foreign key constraint', () {
+      const fkConstraint = ForeignKeyConstraint(
+        name: 'fk_posts_user_id',
+        columns: ['user_id'],
+        referencesTable: 'users',
+        referencesColumns: ['id'],
+        onDelete: ReferentialAction.cascade,
+        onUpdate: ReferentialAction.setNull,
+      );
+
+      final statement = AlterTable(
+        table: 'posts',
+        operations: [AddConstraint(constraint: fkConstraint.toSql())],
+      );
+
+      expect(
+        statement.toSql(),
+        equalsSql(
+          query:
+              '''ALTER TABLE posts ADD CONSTRAINT fk_posts_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE SET NULL''',
+          parameters: {},
+        ),
+      );
+    });
+
+    test('toSql returns correctly when adding multiple constraints', () {
+      const fkConstraint1 = ForeignKeyConstraint(
+        name: 'fk_posts_user_id',
+        columns: ['user_id'],
+        referencesTable: 'users',
+        referencesColumns: ['id'],
+        onDelete: ReferentialAction.cascade,
+      );
+
+      const fkConstraint2 = ForeignKeyConstraint(
+        name: 'fk_posts_category_id',
+        columns: ['category_id'],
+        referencesTable: 'categories',
+        referencesColumns: ['id'],
+        onUpdate: ReferentialAction.setNull,
+      );
+
+      final statement = AlterTable(
+        table: 'posts',
+        operations: [
+          AddConstraint(constraint: fkConstraint1.toSql()),
+          AddConstraint(constraint: fkConstraint2.toSql()),
+        ],
+      );
+
+      expect(
+        statement.toSql(),
+        equalsSql(
+          query:
+              '''ALTER TABLE posts ADD CONSTRAINT fk_posts_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE, ADD CONSTRAINT fk_posts_category_id FOREIGN KEY (category_id) REFERENCES categories (id) ON UPDATE SET NULL''',
+          parameters: {},
+        ),
+      );
+    });
   });
 }

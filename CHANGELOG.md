@@ -1,3 +1,11 @@
+## 2.4.0
+
+- Added `ForeignKeyConstraint` to support `FOREIGN KEY` constraints
+- Added `ForeignKeyTableConstraint` to support `FOREIGN KEY` constraints in `CreateTable`
+- Added `UniqueConstraint` to support `UNIQUE` constraints
+- Added `CheckConstraint` to support `CHECK` constraints
+- Added `PrimaryKeyConstraint` to support `PRIMARY KEY` constraints
+
 ## 2.3.0
 
 - Added `AlterTable` to support `ALTER TABLE` statements

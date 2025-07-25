@@ -182,6 +182,28 @@ void main() {
           ),
         );
       });
+
+      test('isNull returns IsNull', () {
+        final result = column.isNull();
+        expect(result, isA<IsNull>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ IS NULL',
+          ),
+        );
+      });
+
+      test('isNotNull returns IsNotNull', () {
+        final result = column.isNotNull();
+        expect(result, isA<IsNotNull>());
+        expect(
+          result.toSql(),
+          equalsSql(
+            query: '__table__.__colName__ IS NOT NULL',
+          ),
+        );
+      });
     });
   });
   group('Column.star()', () {

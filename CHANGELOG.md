@@ -1,3 +1,10 @@
+## 2.5.0
+
+- Added `IsNull` to support `IS NULL` clauses
+- Added `IsNotNull` to support `IS NOT NULL` clauses
+- Added `isNull()` and `isNotNull()` helper methods to `Column` class
+- Added `TrueFilter` to support unconditional `TRUE` filter statements
+
 ## 2.4.0
 
 - Added `ForeignKeyConstraint` to support `FOREIGN KEY` constraints

@@ -1,3 +1,5 @@
+// ignore_for_file: use_to_and_as_if_applicable
+
 import 'package:postgres_builder/postgres_builder.dart';
 import 'package:recase/recase.dart';
 
@@ -58,7 +60,6 @@ class Column implements SqlStatement {
   @override
   String toString() => table != null ? '$table.$name' : '$name';
 
-  // ignore: use_to_and_as_if_applicable
   FilterStatement operator ~() => Not(this);
 
   Equals equals(dynamic other) => Equals(this, other);
@@ -72,7 +73,9 @@ class Column implements SqlStatement {
   Between between(dynamic lowerValue, dynamic upperValue) =>
       Between(this, lowerValue, upperValue);
 
-  // ignore: use_to_and_as_if_applicable
+  IsNull isNull() => IsNull(this);
+  IsNotNull isNotNull() => IsNotNull(this);
+
   Sort ascending() => Sort(this);
   Sort descending() => Sort(this, direction: SortDirection.descending);
 }
